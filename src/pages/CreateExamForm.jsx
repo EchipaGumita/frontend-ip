@@ -10,65 +10,158 @@ const CreateExamPage = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("Form data submitted:", formData);
     alert("Examenul a fost creat cu succes!");
+    // Poți adăuga un apel la API aici pentru a salva datele
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Creare Examen</h2>
+    <div
+      style={{
+        maxWidth: "500px",
+        margin: "0 auto",
+        padding: "20px",
+        background: "#e8f4fc",
+        borderRadius: "8px",
+      }}
+    >
+      <h2 style={{ textAlign: "center", color: "#003366" }}>Creare Examen</h2>
+      <p style={{ textAlign: "center", color: "#666" }}>Creare examen nou.</p>
       <form onSubmit={handleSubmit}>
-        {[
-          { label: "Materie", name: "subject", type: "text", placeholder: "Introduceți materia" },
-          { label: "Profesori Supraveghetori", name: "supervisingProfessors", type: "text", placeholder: "Introduceți profesorii" },
-          { label: "Grupă/e", name: "groups", type: "text", placeholder: "Introduceți grupa/le" },
-        ].map((field, index) => (
-          <div style={styles.field} key={index}>
-            <label>{field.label}:</label>
-            <input
-              type={field.type}
-              name={field.name}
-              placeholder={field.placeholder}
-              value={formData[field.name]}
-              onChange={handleChange}
-              required
-              style={styles.input}
-            />
-          </div>
-        ))}
-        <div style={styles.field}>
-          <label>Profesor Principal:</label>
+        {/* Materie */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="subject">Materie:</label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            placeholder="Introduceți materia"
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+
+        {/* Profesor Principal */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="mainProfessor">Profesor Principal:</label>
           <select
+            id="mainProfessor"
             name="mainProfessor"
             value={formData.mainProfessor}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
           >
-            <option value="" disabled>Selectați profesorul</option>
+            <option value="" disabled>
+              Selectați profesorul
+            </option>
             <option value="prof1">Prof. Ion Popescu</option>
             <option value="prof2">Prof. Maria Ionescu</option>
+            <option value="prof3">Prof. Alexandru Vasile</option>
           </select>
         </div>
-        <div style={styles.field}>
-          <label>Facultate:</label>
+
+        {/* Profesori Supraveghetori */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="supervisingProfessors">Profesori Supraveghetori:</label>
+          <input
+            type="text"
+            id="supervisingProfessors"
+            name="supervisingProfessors"
+            value={formData.supervisingProfessors}
+            onChange={handleChange}
+            placeholder="Introduceți profesorii supraveghetori"
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+
+        {/* Facultate */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="faculty">Facultate:</label>
           <select
+            id="faculty"
             name="faculty"
             value={formData.faculty}
             onChange={handleChange}
             required
-            style={styles.input}
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
           >
-            <option value="" disabled>Selectați facultatea</option>
-            <option value="matematica">Facultatea de Matematică</option>
-            <option value="informatica">Facultatea de Informatică</option>
+            <option value="" disabled>
+              Selectați facultatea
+            </option>
+            <option value="facultate1">Facultatea de Matematică</option>
+            <option value="facultate2">Facultatea de Informatică</option>
+            <option value="facultate3">Facultatea de Fizică</option>
           </select>
         </div>
-        <button type="submit" style={styles.button}>Confirmare Adăugare</button>
+
+        {/* Grupe */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="groups">Grupă/e:</label>
+          <input
+            type="text"
+            id="groups"
+            name="groups"
+            value={formData.groups}
+            onChange={handleChange}
+            placeholder="Introduceți grupa/le"
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+
+        {/* Confirmare */}
+        <button
+          type="submit"
+          style={{
+            width: "100%",
+            padding: "10px",
+            background: "#007BFF",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Confirmare Adăugare
+        </button>
       </form>
     </div>
   );
