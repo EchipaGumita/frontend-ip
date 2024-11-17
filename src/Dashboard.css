@@ -1,0 +1,103 @@
+/* src/pages/Dashboard.css */
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #6699cc;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  .sidebar-header {
+    text-align: center;
+  }
+  
+  .logo {
+    width: 80px;
+    margin-bottom: 10px;
+  }
+  
+  .nav-menu ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .nav-menu li {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .nav-menu li svg {
+    margin-right: 10px;
+  }
+  
+  .nav-menu .active {
+    background-color: #4a7bbd;
+    border-radius: 4px;
+  }
+  
+  .content {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    padding: 20px;
+    background-color: #f2f2f2;
+  }
+  
+  .section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .section h3 {
+    margin-top: 0;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .search-bar button {
+    padding: 5px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  .table-header, .table-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .table-header {
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+  }
+  
