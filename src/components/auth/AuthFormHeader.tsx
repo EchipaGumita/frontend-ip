@@ -9,8 +9,8 @@ type Props = {
     return (
       <>
         <img
-          src="/assets/assist-academy-logo.png"
-          alt="Assist Academy Logo"
+          src="/src/assets/logo-usv.jpg"
+          alt="Logo USV"
           className="max-w-[25%] mb-12"
         />
         <h1 className="font-semibold mb-2 text-textPrimary text-3xl sm:text-4xl">
