@@ -1,18 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import DashboardPage from './pages/DashboardPage';
-import HomePage from './pages/HomePage';
-import ProfilePage from './pages/ProfilePage';
-import SettingsPage from './pages/SettingsPage';
+import Login from '../src/pages/LoginPage';
 
-const App = () => (
-  <Router>
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/settings" element={<SettingsPage />} />
-    </Routes>
-  </Router>
-);
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        {/* Add more routes as necessary */}
+      </Routes>
+    </Router>
+  );
+};
 
 export default App;
