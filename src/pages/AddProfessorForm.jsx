@@ -10,12 +10,12 @@ const AddProfessorForm = () => {
     position: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     // Add your API call or data submission logic here
@@ -96,7 +96,7 @@ const AddProfessorForm = () => {
 };
 
 // CSS-in-JS style objects
-const containerStyle: React.CSSProperties = {
+const containerStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -104,7 +104,7 @@ const containerStyle: React.CSSProperties = {
   backgroundColor: '#f2f2f2',
 };
 
-const formStyle: React.CSSProperties = {
+const formStyle = {
   backgroundColor: '#4a90e2',
   padding: '20px',
   borderRadius: '8px',
@@ -112,21 +112,21 @@ const formStyle: React.CSSProperties = {
   width: '400px',
   color: '#fff',
   display: 'flex',
-  flexDirection: 'column', // Explicit type matches 'FlexDirection'
+  flexDirection: 'column',
 };
 
-const titleStyle: React.CSSProperties = {
+const titleStyle = {
   marginBottom: '10px',
   fontSize: '20px',
   fontWeight: 'bold',
 };
 
-const subtitleStyle: React.CSSProperties = {
+const subtitleStyle = {
   marginBottom: '20px',
   fontSize: '14px',
 };
 
-const inputStyle: React.CSSProperties = {
+const inputStyle = {
   marginBottom: '15px',
   padding: '10px',
   fontSize: '14px',
@@ -135,7 +135,7 @@ const inputStyle: React.CSSProperties = {
   outline: 'none',
 };
 
-const buttonStyle: React.CSSProperties = {
+const buttonStyle = {
   padding: '10px',
   fontSize: '16px',
   fontWeight: 'bold',
