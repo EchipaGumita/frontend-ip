@@ -61,8 +61,17 @@ const AddProfessorForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
-          <option value="Facultatea de Matematica">Facultatea de Matematica</option>
-          <option value="Facultatea de Fizica">Facultatea de Fizica</option>
+          <option value="FIESC">FIESC</option>
+          <option value="FDSA">FDSA</option>
+          <option value="FEAA">FEAA</option>
+          <option value="FEFS">FEFS</option>
+          <option value="FIA">FIA</option>
+          <option value="FIMAR">FIMAR</option>
+          <option value="FIG">FIG</option>
+          <option value="FLSC">FLSC</option>
+          <option value="FMSB">FMSB</option>
+          <option value="FS">FS</option>
+          <option value="FSE">FSE</option>
           {/* Add more options as needed */}
         </select>
 
@@ -73,8 +82,13 @@ const AddProfessorForm = () => {
           style={inputStyle}
         >
           <option value="">Materii</option>
-          <option value="Matematica">Matematica</option>
+          <option value="Matematica">Analiza Matematica</option>
           <option value="Fizica">Fizica</option>
+          <option value="Fizica">Matematici Speciale</option>
+          <option value="Fizica">Electrotehnica</option>
+          <option value="Fizica">Algebra Liniara</option>
+
+
           {/* Add more options as needed */}
         </select>
 
@@ -105,7 +119,7 @@ const containerStyle = {
 };
 
 const formStyle = {
-  backgroundColor: '#4a90e2',
+  backgroundColor: '#272f54',
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -131,7 +145,9 @@ const inputStyle = {
   padding: '10px',
   fontSize: '14px',
   borderRadius: '4px',
-  border: 'none',
+  border: '1px solid #ccc',
+  backgroundColor: '#fff', // Casetele albe
+  color: '#333',
   outline: 'none',
 };
 
@@ -139,8 +155,8 @@ const buttonStyle = {
   padding: '10px',
   fontSize: '16px',
   fontWeight: 'bold',
-  backgroundColor: '#003366',
-  color: '#fff',
+  backgroundColor: '#81AFE2',
+  color: '#272f54',
   borderRadius: '4px',
   border: 'none',
   cursor: 'pointer',
