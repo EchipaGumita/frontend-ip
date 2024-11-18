@@ -82,11 +82,11 @@ const AddProfessorForm = () => {
           style={inputStyle}
         >
           <option value="">Materii</option>
-          <option value="Matematica">Analiza Matematica</option>
+          <option value="Analiza Matematica">Analiza Matematica</option>
           <option value="Fizica">Fizica</option>
-          <option value="Fizica">Matematici Speciale</option>
-          <option value="Fizica">Electrotehnica</option>
-          <option value="Fizica">Algebra Liniara</option>
+          <option value="Matematici Speciale">Matematici Speciale</option>
+          <option value="FElectrotehnica">Electrotehnica</option>
+          <option value="Algebra Liniara">Algebra Liniara</option>
 
 
           {/* Add more options as needed */}
