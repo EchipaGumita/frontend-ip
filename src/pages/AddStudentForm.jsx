@@ -121,8 +121,10 @@ const inputStyle = {
   padding: '10px',
   fontSize: '14px',
   borderRadius: '4px',
-  border: 'none',
+  border: '1px solid #ccc', 
   outline: 'none',
+  backgroundColor: '#fff', // fundal alb
+  color: '#000', 
 };
 
 const buttonStyle = {
