@@ -21,7 +21,7 @@ const CreateExamPage = () => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
     alert("Examenul a fost creat cu succes!");
-    // Poți adăuga un apel la API aici pentru a salva datele
+    // merge adaugat un apel la API aici pentru a salva datele
   };
 
   return (
