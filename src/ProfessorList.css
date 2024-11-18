@@ -1,0 +1,143 @@
+.professors-page {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #0044cc;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.sidebar .logo img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar nav ul li {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.sidebar nav ul li.active {
+    background-color: #003399;
+    border-radius: 4px;
+}
+
+.sidebar .logout {
+    margin-top: auto;
+    background-color: #ff3333;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.sidebar .logout:hover {
+    background-color: #cc0000;
+}
+
+.content {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #333;
+}
+
+.header input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px;
+}
+
+.professors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.professor-item {
+    background: #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.professor-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.professor-icon {
+    font-size: 24px;
+}
+
+.professor-actions {
+    position: relative;
+}
+
+.more-button {
+    background: #0044cc;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.more-button:hover {
+    background: #003399;
+}
+
+.dropdown {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: none;
+    flex-direction: column;
+}
+
+.dropdown button {
+    padding: 10px;
+    border: none;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown button:hover {
+    background: #f0f0f0;
+}
+
+.professor-actions:hover .dropdown {
+    display: flex;
+}
