@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CreateExamPage = () => {
+const CreateExamForms = () => {
   const [formData, setFormData] = useState({
     subject: "",
     mainProfessor: "",
