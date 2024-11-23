@@ -2,7 +2,9 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import '../Dashboard.css';
-import { Folder, FileText, User, Users } from 'lucide-react';
+import { Folder, FileText, User } from 'lucide-react';
+import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+
 
 const Dashboard = () => {
   return (
@@ -14,9 +16,8 @@ const Dashboard = () => {
         </div>
         <nav className="nav-menu">
           <ul>
-            <li><Folder /> Dashboard</li>
-            <li className="active"><FileText /> Examene</li>
-            <li><Users /> Studenti</li>
+            <li className="active"><Folder /> Orar Examene</li>
+            <li><FileText /> Examene</li>
             <li><User /> Profesori</li>
           </ul>
         </nav>
@@ -27,7 +28,9 @@ const Dashboard = () => {
           <h3>Orar examene</h3>
           <div className="search-bar">
             <input type="text" placeholder="Search..." />
-            <button><span role="img" aria-label="search">🔍</span></button>
+            <button type="submit" className="bg-white px-3 py-3">
+                <HiMiniMagnifyingGlass />
+            </button>
           </div>
           <div className="table-header">
             <span>Materie</span>
@@ -43,21 +46,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section className="section professors">
-          <h3>Profesori</h3>
-          <div className="search-bar">
-            <input type="text" placeholder="Search..." />
-            <button><span role="img" aria-label="search">🔍</span></button>
-          </div>
-          <div className="table-header">
-            <span>Nume</span>
-            <span>Email</span>
-            <span>Materie</span>
-          </div>
-          <div className="table-body">
-            {/* Rows of professors would go here */}
-          </div>
-        </section>
+        
       </main>
     </div>
   );
