@@ -17,8 +17,8 @@ const Dashboard = () => {
         <nav className="nav-menu">
           <ul>
             <li className="active"><Folder /> Orar Examene</li>
-            <li><FileText /> Examene</li>
-            <li><User /> Profesori</li>
+            <li onClick={() => window.location.href = '/examslist'}><FileText /> Examene</li>
+            <li onClick={() => window.location.href = '/professorlist'}><User /> Profesori</li>
           </ul>
         </nav>
       </aside>
