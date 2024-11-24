@@ -17,11 +17,10 @@ const ForgotPasswordPage = () => {
     <div style={containerStyle}>
       <div style={logoContainerStyle}>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/e/e3/USV_Logo.png"
+          src="../../src/assets/logo usv.png"
           alt="USV Logo"
           style={logoStyle}
         />
-        <h2 style={universityNameStyle}>Universitatea „Ștefan cel Mare” din Suceava</h2>
       </div>
 
       <div style={formContainerStyle}>
@@ -64,12 +63,6 @@ const logoContainerStyle = {
 const logoStyle = {
   width: '150px',
   marginBottom: '10px',
-};
-
-const universityNameStyle = {
-  fontSize: '18px',
-  fontWeight: 'bold',
-  color: '#003366',
 };
 
 const formContainerStyle = {
