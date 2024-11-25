@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import '../ExamsList.css';
-import { Folder, FileText, User } from 'lucide-react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
+import Sidebar from '../components/Sidebar';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const ExamsList = () => {
@@ -25,21 +25,7 @@ const ExamsList = () => {
 
   return (
     <div className="dashboard-container">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <img src="../../src/assets/logo usv.png" alt="USV Logo" className="logo" />
-          <h2>USV</h2>
-        </div>
-        <nav className="nav-menu">
-          <ul>
-            <li onClick={() => window.location.href = '/dashboard'}><Folder /> Orar Examene</li>
-            <li className="active"><FileText /> Examene</li>
-            <li onClick={() => window.location.href = '/studentslist'}><User /> Studenți</li>
-            <li onClick={() => window.location.href = '/professorlist'}><User /> Profesori</li>
-          </ul>
-        </nav>
-      </aside>
-
+      <Sidebar/>
       <main className="section exams">
         <h3>Toate examenele</h3>
         <div className="search-bar">

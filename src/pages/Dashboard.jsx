@@ -3,6 +3,7 @@ import '../Dashboard.css';
 import { Folder, FileText, User } from 'lucide-react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
+import Sidebar from '../components/Sidebar';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
@@ -25,20 +26,8 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <img src="../../src/assets/logo usv.png" alt="USV Logo" className="logo" />
-          <h2>USV</h2>
-        </div>
-        <nav className="nav-menu">
-          <ul>
-            <li className="active"><Folder /> Orar Examene</li>
-            <li onClick={() => window.location.href = '/examslist'}><FileText /> Examene</li>
-            <li onClick={() => window.location.href = '/professorlist'}><User /> Profesori</li>
-          </ul>
-        </nav>
-      </aside>
-
+      
+      <Sidebar/>
       <main className="content">
         <section className="section exams">
           <h3>Orar examene</h3>
