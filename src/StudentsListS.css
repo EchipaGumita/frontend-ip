@@ -1,0 +1,68 @@
+.dashboard-container {
+    display: flex;
+    font-family: Arial, sans-serif;
+  }
+  
+  .sidebar {
+    background-color: #b0c4de;
+    width: 250px;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .sidebar .nav-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar .nav-menu ul li {
+    margin: 15px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar .nav-menu ul li.active {
+    font-weight: bold;
+    color: #003366;
+  }
+  
+  .section {
+    padding: 20px;
+    flex-grow: 1;
+    background-color: #f9f9f9;
+  }
+  
+  .students h3 {
+    margin-bottom: 20px;
+  }
+  
+  .students-table {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .student-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .student-row:last-child {
+    border-bottom: none;
+  }
+  
+  .student-row span {
+    width: 33%;
+    text-align: left;
+  }
+  
