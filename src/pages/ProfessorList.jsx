@@ -1,71 +1,76 @@
-import React, { useState } from 'react';
-import './ProfessorList.css';
+import React, { useEffect, useState } from 'react';
+import { Folder, FileText, User } from 'react-feather';
 
-export const ProfessorList = () => {
-    const [professors, setProfessors] = useState([
-        { id: 1, name: 'Profesor 1' },
-        { id: 2, name: 'Profesor 2' },
-        { id: 3, name: 'Profesor 3' },
-        { id: 4, name: 'Profesor 4' },
-        { id: 5, name: 'Profesor 5' },
-    ]);
+const ProfessorList = () => {
+  const [professors, setProfessors] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-    const [searchTerm, setSearchTerm] = useState('');
+  useEffect(() => {
+    // Fetch lista de profesori din baza de date
+    fetch('https://api.exemplu.com/professors') // Înlocuiește cu API-ul tău real
+      .then((response) => response.json())
+      .then((data) => setProfessors(data))
+      .catch((error) => console.error('Eroare la preluarea profesorilor:', error));
+  }, []);
 
-    const filteredProfessors = professors.filter((prof) =>
-        prof.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
-    const handleDelete = (id) => {
-        setProfessors(professors.filter((prof) => prof.id !== id));
-    };
+  const filteredProfessors = professors.filter((professor) =>
+    professor.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    return (
-        <div className="professors-page">
-            <aside className="sidebar">
-                <div className="logo">
-                    <img src="/src/assets/logo-usv.png" alt="USV Logo" />
-                </div>
-                <nav>
-                    <ul>
-                        <li>Dashboard</li>
-                        <li>Examene</li>
-                        <li>Studenți</li>
-                        <li className="active">Profesori</li>
-                    </ul>
-                </nav>
-                <button className="logout">Logout</button>
-            </aside>
-
-            <main className="content">
-                <header className="header">
-                    <h1>Toți profesorii</h1>
-                    <input
-                        type="text"
-                        placeholder="Caută profesor..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </header>
-                <section className="professors-list">
-                    {filteredProfessors.map((prof) => (
-                        <div key={prof.id} className="professor-item">
-                            <div className="professor-info">
-                                <i className="professor-icon">📄</i>
-                                <span>{prof.name}</span>
-                            </div>
-                            <div className="professor-actions">
-                                <button className="more-button">More ▼</button>
-                                <div className="dropdown">
-                                    <button>Detalii profesor</button>
-                                    <button>Editare profesor</button>
-                                    <button onClick={() => handleDelete(prof.id)}>Ștergere profesor</button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </section>
-            </main>
+  return (
+    <div className="container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <div className="sidebar-header">
+          <img src="../../src/assets/logo usv.png" alt="USV Logo" className="logo" />
+          <h2>USV</h2>
         </div>
-    );
+        <nav className="nav-menu">
+          <ul>
+            <li><Folder /> Dashboard</li>
+            <li onClick={() => window.location.href = '/examslist'}><FileText /> Examene</li>
+            <li className="active"><User /> Profesori</li>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Content */}
+      <main className="main-content">
+        <h1>Toți profesorii</h1>
+
+        {/* Bara de căutare */}
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Caută un profesor..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <button>Caută</button>
+        </div>
+
+        {/* Lista de profesori */}
+        <div className="professors-list">
+          {filteredProfessors.map((professor) => (
+            <div className="professor-card" key={professor.id}>
+              <div className="professor-info">
+                <span>{professor.name}</span>
+              </div>
+              <div className="professor-actions">
+                <button>Detalii profesor</button>
+                <button>Editare profesor</button>
+                <button>Ștergere profesor</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
 };
+
+export default ProfessorList;
