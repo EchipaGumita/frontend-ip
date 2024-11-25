@@ -89,13 +89,27 @@
     border-radius: 0 4px 4px 0;
   }
   
-  .table-header, .table-body {
+  .table-header{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     font-size: 14px;
     font-weight: bold;
   }
+  .table-body {
+    display: block;
+  }
   
+  .table-row {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .table-row span {
+    flex: 1; /* Ensures the columns stretch evenly */
+    padding: 5px;
+  }
   .table-header {
     border-bottom: 2px solid #ccc;
     padding-bottom: 5px;

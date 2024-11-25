@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import Axios
 import '../LoginPage.css';
 
-
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -10,19 +11,32 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         if (!email || !password) {
             setError('Please fill in both fields');
             return;
         }
-
-        // Simulate credential checking
-        if (email === 'user@example.com' && password === 'password') {
-            navigate('/dashboard'); // Redirect on success
-        } else {
-            setError('Invalid email or password');
+    
+        try {
+            const response = await axios.post(`${backendURL}/auth/login`, {
+                email,
+                password,
+            });
+    
+            // Save token to localStorage
+            localStorage.setItem('token', response.data.token);
+            
+            // Redirect on success
+            navigate('/dashboard');
+        } catch (error) {
+            // Handle errors
+            if (error.response && error.response.data) {
+                setError(error.response.data.message || 'Invalid email or password');
+            } else {
+                setError('An error occurred. Please try again later.');
+            }
         }
     };
 
@@ -50,7 +64,6 @@ const LoginPage = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
                     />
-                    
 
                     {error && <p style={{ color: 'red' }}>{error}</p>}
 

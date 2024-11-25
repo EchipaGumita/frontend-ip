@@ -1,12 +1,28 @@
-// src/pages/Dashboard.jsx
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Dashboard.css';
 import { Folder, FileText, User } from 'lucide-react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
-
+import axios from 'axios'; // Import axios
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const ProfessorList = () => {
+  // State to store professors
+  const [professors, setProfessors] = useState([]);
+
+  // Fetch professors data when the component mounts
+  useEffect(() => {
+    const fetchProfessors = async () => {
+      try {
+        const response = await axios.get(`${backendURL}/professor`); // Using axios to make the GET request
+        setProfessors(response.data.professors); // Assuming response structure has a 'professors' field
+      } catch (error) {
+        console.error('Error fetching professors:', error);
+      }
+    };
+
+    fetchProfessors();
+  }, []);
+
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -16,36 +32,46 @@ const ProfessorList = () => {
         </div>
         <nav className="nav-menu">
           <ul>
-             <li onClick={() => window.location.href = '/dashboard'}><User />Orar Examene</li>
+            <li onClick={() => window.location.href = '/dashboard'}><Folder /> Orar Examene</li>
             <li onClick={() => window.location.href = '/examslist'}><FileText /> Examene</li>
-            <li className="active"><Folder />Profesori</li>
+            <li className="active"><User /> Profesori</li>
           </ul>
         </nav>
       </aside>
 
       <main className="section professors">
-    <h3>Profesori</h3>
+        <h3>Profesori</h3>
         <div className="search-bar">
-            <input type="text" placeholder="Search..." />
-            <button type="submit" className="bg-white px-3 py-3">
-                <HiMiniMagnifyingGlass />
-            </button>
-          </div>
-          <div className="table-header">
-            <span>Nume</span>
-            <span>Email</span>
-            <span>Materie</span>
-          </div>
-          <div className="table-body">
+          <input type="text" placeholder="Search..." />
+          <button type="submit" className="bg-white px-3 py-3">
+            <HiMiniMagnifyingGlass />
+          </button>
         </div>
-  </main>
+
+        {/* Table Headers (Columns) */}
+        <div className="table-header">
+          <span>Nume</span>           {/* Column for Name */}
+          <span>Email</span>          {/* Column for Email */}
+          <span>Materie</span>        {/* Column for Subject */}
+        </div>
+
+        {/* Table Body (Rows) */}
+        <div className="table-body">
+          {professors.length > 0 ? (
+            professors.map((professor) => (
+              <div key={professor._id} className="table-row">
+                <span>{professor.firstName} {professor.lastName}</span>  {/* Professor Name */}
+                <span>{professor.email}</span>  {/* Professor Email */}
+                <span>{professor.department}</span>  {/* Professor Subject */}
+              </div>
+            ))
+          ) : (
+            <div>No professors found.</div>
+          )}
+        </div>
+      </main>
     </div>
   );
 };
 
 export default ProfessorList;
-
-
-
-
- 

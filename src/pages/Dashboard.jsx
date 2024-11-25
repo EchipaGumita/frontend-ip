@@ -1,12 +1,28 @@
-// src/pages/Dashboard.jsx
-// eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Dashboard.css';
 import { Folder, FileText, User } from 'lucide-react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
-
+import axios from 'axios'; // Import axios
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
+  // State to store exams
+  const [exams, setExams] = useState([]);
+
+  // Fetch exams data when the component mounts
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const response = await axios.get(`${backendURL}/exam`); // Using axios to make the GET request
+        setExams(response.data.exams); // Assuming response structure has an 'exams' field
+      } catch (error) {
+        console.error('Error fetching exams:', error);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -29,24 +45,44 @@ const Dashboard = () => {
           <div className="search-bar">
             <input type="text" placeholder="Search..." />
             <button type="submit" className="bg-white px-3 py-3">
-                <HiMiniMagnifyingGlass />
+              <HiMiniMagnifyingGlass />
             </button>
           </div>
+
+          {/* Table Headers (Columns) */}
           <div className="table-header">
-            <span>Materie</span>
-            <span>Grupa</span>
-            <span>Examiner</span>
-            <span>Assistant</span>
-            <span>Data</span>
-            <span>Ora</span>
-            <span>Sala</span>
+            <span>Materie</span>         {/* Column for Subject */}
+            <span>Grupa</span>          {/* Column for Group */}
+            <span>Examiner</span>       {/* Column for Main Professor */}
+            <span>Assistant</span>      {/* Column for Secondary Professor */}
+            <span>Data</span>           {/* Column for Exam Date */}
+            <span>Ora</span>            {/* Column for Exam Hour */}
+            <span>Sala</span>           {/* Column for Classroom */}
           </div>
+
+          {/* Table Body (Rows) */}
           <div className="table-body">
-            {/* Rows of exam schedules would go here */}
+            {exams.length > 0 ? (
+              exams.map((exam) => (
+                <div key={exam._id} className="table-row">
+                  <span>{exam.subject}</span>          {/* Subject (Materie) */}
+                  <span>{exam.group?.name || 'No group assigned'}</span>   {/* Group Name */}
+                  <span>{exam.mainProfessor?.firstName} {exam.mainProfessor?.lastName || 'N/A'}</span>  {/* Main Professor */}
+                  <span>
+                    {exam.secondaryProfessor
+                      ? `${exam.secondaryProfessor.firstName} ${exam.secondaryProfessor.lastName}`
+                      : 'N/A'}
+                  </span>  {/* Secondary Professor */}
+                  <span>{new Date(exam.date).toLocaleDateString()}</span>   {/* Exam Date */}
+                  <span>{exam.hour}</span>  {/* Exam Hour */}
+                  <span>{exam.classroom?.name || 'No classroom assigned'}</span>   {/* Classroom */}
+                </div>
+              ))
+            ) : (
+              <div>No exams found.</div>
+            )}
           </div>
         </section>
-
-        
       </main>
     </div>
   );

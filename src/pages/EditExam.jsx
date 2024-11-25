@@ -1,64 +1,148 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import '../EditExam.css'; // Import the CSS file
+
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const EditExam = () => {
+  const { id } = useParams(); // Get the exam ID from the URL
   const [formData, setFormData] = useState({
     subject: "",
     mainProfessor: "",
-    supervisingProfessors: "",
+    secondaryProfessor: "",
     faculty: "",
-    groups: "",
+    group: "",
+    classroom: "",
+    startTime: "",
   });
+  const [groups, setGroups] = useState([]); 
+  const [professors, setProfessors] = useState([]);            
+  const [classrooms, setClassrooms] = useState([]);  
+  const [hours, setHours] = useState([
+    "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
+  ]);
+
+  // Retrieve JWT from localStorage (or sessionStorage or context, based on your app setup)
+  const jwt = localStorage.getItem("jwt");
+
+  useEffect(() => {
+    const fetchExamData = async () => {
+      try {
+        const examResponse = await axios.get(`${backendURL}/exam/${id}`);
+        setFormData({
+          subject: examResponse.data.subject,
+          mainProfessor: examResponse.data.mainProfessor,
+          secondaryProfessor: examResponse.data.secondaryProfessor,
+          faculty: examResponse.data.faculty,
+          group: examResponse.data.group,
+          classroom: examResponse.data.classroom,
+          startTime: examResponse.data.hour,
+        });
+  
+        const professorsResponse = await axios.get(`${backendURL}/professor`);
+        setProfessors(professorsResponse.data.professors || []);
+  
+        const groupsResponse = await axios.get(`${backendURL}/groups`);
+        const flattenedGroups = groupsResponse.data.groups.flatMap(group => 
+          group.subGroups.map(subGroup => ({
+            ...subGroup,
+            parentGroupId: group._id,
+            parentGroupName: group.name
+          }))
+        );
+        setGroups(flattenedGroups);
+  
+        const classroomsResponse = await axios.get(`${backendURL}/classroom`, {
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        console.log("Classrooms Response:", classroomsResponse.data); // Check if this is correct
+        setClassrooms(Array.isArray(classroomsResponse.data.classrooms) ? classroomsResponse.data.classrooms : []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchExamData();
+  }, [id, jwt]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data submitted:", formData);
-    // Adaugă logica pentru salvarea datelor
+
+    // Prepare the data to be sent, including 'hour' and 'classroom'
+    const dataToUpdate = {
+      hour: formData.startTime,  // Only send the hour field
+      classroom: formData.classroom,  // Send the classroom ObjectId
+    };
+
+    try {
+      const response = await axios.put(`${backendURL}/exam/${id}`, dataToUpdate, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      console.log("Exam updated:", response.data);
+      // Optionally, show success message or redirect
+    } catch (error) {
+      console.error("Error updating exam:", error);
+    }
   };
 
   return (
-    <div style={mainContainerStyle}>
-      <form style={formStyle} onSubmit={handleSubmit}>
-        <h3 style={formTitleStyle}>Editare Examen</h3>
-        <p style={formSubtitleStyle}>Editare examen </p>
+    <div className="main-container">
+      <form className="form-container" onSubmit={handleSubmit}>
+        <h3 className="form-title">Editare Examen</h3>
+        <p className="form-subtitle">Editare examen </p>
 
         <input
           type="text"
           name="subject"
           placeholder="Materie"
-          value={formData.subject}
+          value={formData.subject || ""}
           onChange={handleChange}
-          style={inputStyle}
-        />
-
-        <input
-          type="text"
-          name="mainProfessor"
-          placeholder="Profesor principal"
-          value={formData.mainProfessor}
-          onChange={handleChange}
-          style={inputStyle}
-        />
-
-        <input
-          type="text"
-          name="supervisingProfessors"
-          placeholder="Profesori supraveghetori"
-          value={formData.supervisingProfessors}
-          onChange={handleChange}
-          style={inputStyle}
+          className="input-field"
         />
 
         <select
-          name="faculty"
-          value={formData.faculty}
+          name="mainProfessor"
+          value={formData.mainProfessor || ""}
           onChange={handleChange}
-          style={inputStyle}
+          className="input-field"
+        >
+          <option value="">Selectează Profesor Principal</option>
+          {professors.map((professor) => (
+            <option key={professor._id} value={professor._id}>
+              {professor.firstName} {professor.lastName}
+            </option>
+          ))}
+        </select>
+
+        <select
+          name="secondaryProfessor"
+          value={formData.secondaryProfessor || ""}
+          onChange={handleChange}
+          className="input-field"
+        >
+          <option value="">Selectează Profesor Suplimentar</option>
+          {professors.map((professor) => (
+            <option key={professor._id} value={professor._id}>
+              {professor.firstName} {professor.lastName}
+            </option>
+          ))}
+        </select>
+
+        <select
+          name="faculty"
+          value={formData.faculty || ""}
+          onChange={handleChange}
+          className="input-field"
         >
           <option value="">Facultate</option>
           <option value="FIESC">FIESC</option>
@@ -72,79 +156,61 @@ const EditExam = () => {
           <option value="FMSB">FMSB</option>
           <option value="FS">FS</option>
           <option value="FSE">FSE</option>
-          {/* Adaugă alte opțiuni aici */}
         </select>
 
-        <input
-          type="text"
-          name="groups"
-          placeholder="Grupe"
-          value={formData.groups}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+        <select
+  name="group"
+  value={formData.group || ""}
+  onChange={handleChange}
+  className="input-field"
+>
+  <option value="">Selectează Grupă</option>
+  {Array.isArray(groups) && groups.length > 0 ? (
+    groups.map((group) => (
+      <option key={group._id} value={group._id}>
+        {group.parentGroupName} - {group.name}
+      </option>
+    ))
+  ) : (
+    <option value="">No groups available</option>
+  )}
+</select>
 
-        <button type="submit" style={buttonStyle}>
-          Confirmare Editare
-        </button>
+<select
+  name="classroom"
+  value={formData.classroom}
+  onChange={(e) => setFormData({ ...formData, classroom: e.target.value })}
+>
+  <option value="">Select Classroom</option>
+  {classrooms.length > 0 ? (
+    classrooms.map((classroom) => (
+      <option key={classroom._id} value={classroom._id}>
+        {classroom.name}
+      </option>
+    ))
+  ) : (
+    <option>No classrooms available</option>
+  )}
+</select>
+
+        <select
+          name="startTime"
+          value={formData.startTime || ""}
+          onChange={handleChange}
+          className="input-field"
+        >
+          <option value="">Selectează Ora de Începere</option>
+          {hours.map((hour, index) => (
+            <option key={index} value={hour}>
+              {hour}
+            </option>
+          ))}
+        </select>
+
+        <button type="submit" className="submit-button">Salvează Modificările</button>
       </form>
     </div>
   );
-};
-
-// Stiluri CSS-in-JS
-const mainContainerStyle = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100vh",
-  backgroundColor: "#e3e3e3",
-  fontFamily: "Arial, sans-serif",
-};
-
-const formStyle = {
-  backgroundColor: "#8aa4d8",
-  padding: "20px",
-  borderRadius: "8px",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  width: "400px",
-  display: "flex",
-  flexDirection: "column",
-};
-
-const formTitleStyle = {
-  fontSize: "20px",
-  color: "#333",
-  marginBottom: "10px",
-};
-
-const formSubtitleStyle = {
-  fontSize: "14px",
-  color: "#666",
-  marginBottom: "20px",
-};
-
-const inputStyle = {
-    marginBottom: "15px",
-    padding: "10px",
-    fontSize: "14px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    outline: "none",
-    backgroundColor: "#ffffff", // Fundal alb
-    color: "#000000",          // Text negru pentru contrast
-  };
-
-const buttonStyle = {
-  padding: "10px",
-  fontSize: "16px",
-  fontWeight: "bold",
-  backgroundColor: "#4F96E8",
-  color: "#fff",
-  borderRadius: "4px",
-  border: "none",
-  cursor: "pointer",
 };
 
 export default EditExam;
