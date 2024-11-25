@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import '../Dashboard.css';
-import { Folder, FileText, User } from 'lucide-react';
-import { HiMiniMagnifyingGlass } from "react-icons/hi2";
-import axios from 'axios'; // Import axios
-const backendURL = import.meta.env.VITE_BACKEND_URL;
+import { Folder, FileText, User } from 'react-feather';
 
 const ProfessorList = () => {
-  // State to store professors
   const [professors, setProfessors] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Fetch professors data when the component mounts
   useEffect(() => {
-    const fetchProfessors = async () => {
-      try {
-        const response = await axios.get(`${backendURL}/professor`); // Using axios to make the GET request
-        setProfessors(response.data.professors); // Assuming response structure has a 'professors' field
-      } catch (error) {
-        console.error('Error fetching professors:', error);
-      }
-    };
-
-    fetchProfessors();
+    // Fetch lista de profesori din baza de date
+    fetch('https://api.exemplu.com/professors') // Înlocuiește cu API-ul tău real
+      .then((response) => response.json())
+      .then((data) => setProfessors(data))
+      .catch((error) => console.error('Eroare la preluarea profesorilor:', error));
   }, []);
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredProfessors = professors.filter((professor) =>
+    professor.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="dashboard-container">
+    <div className="container">
+      {/* Sidebar */}
       <aside className="sidebar">
         <div className="sidebar-header">
           <img src="../../src/assets/logo usv.png" alt="USV Logo" className="logo" />
@@ -32,42 +31,42 @@ const ProfessorList = () => {
         </div>
         <nav className="nav-menu">
           <ul>
-            <li onClick={() => window.location.href = '/dashboard'}><Folder /> Orar Examene</li>
+            <li><Folder /> Dashboard</li>
             <li onClick={() => window.location.href = '/examslist'}><FileText /> Examene</li>
             <li className="active"><User /> Profesori</li>
           </ul>
         </nav>
       </aside>
 
-      <main className="section professors">
-        <h3>Profesori</h3>
+      {/* Content */}
+      <main className="main-content">
+        <h1>Toți profesorii</h1>
+
+        {/* Bara de căutare */}
         <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <button type="submit" className="bg-white px-3 py-3">
-            <HiMiniMagnifyingGlass />
-          </button>
+          <input
+            type="text"
+            placeholder="Caută un profesor..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <button>Caută</button>
         </div>
 
-        {/* Table Headers (Columns) */}
-        <div className="table-header">
-          <span>Nume</span>           {/* Column for Name */}
-          <span>Email</span>          {/* Column for Email */}
-          <span>Materie</span>        {/* Column for Subject */}
-        </div>
-
-        {/* Table Body (Rows) */}
-        <div className="table-body">
-          {professors.length > 0 ? (
-            professors.map((professor) => (
-              <div key={professor._id} className="table-row">
-                <span>{professor.firstName} {professor.lastName}</span>  {/* Professor Name */}
-                <span>{professor.email}</span>  {/* Professor Email */}
-                <span>{professor.department}</span>  {/* Professor Subject */}
+        {/* Lista de profesori */}
+        <div className="professors-list">
+          {filteredProfessors.map((professor) => (
+            <div className="professor-card" key={professor.id}>
+              <div className="professor-info">
+                <span>{professor.name}</span>
               </div>
-            ))
-          ) : (
-            <div>No professors found.</div>
-          )}
+              <div className="professor-actions">
+                <button>Detalii profesor</button>
+                <button>Editare profesor</button>
+                <button>Ștergere profesor</button>
+              </div>
+            </div>
+          ))}
         </div>
       </main>
     </div>

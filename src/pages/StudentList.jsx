@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import '../ExamsList.css';
+import '../Dashboard.css';
 import { Folder, FileText, User } from 'lucide-react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-const ExamsList = () => {
-  // State to store exams
-  const [exams, setExams] = useState([]);
+const StudentsList = () => {
+  // State to store students
+  const [students, setStudents] = useState([]);
 
-  // Fetch exams data when the component mounts
+  // Fetch students data when the component mounts
   useEffect(() => {
-    const fetchExams = async () => {
+    const fetchStudents = async () => {
       try {
-        const response = await axios.get(`${backendURL}/exams`); // Using axios to make the GET request
-        setExams(response.data.exams); // Assuming response structure has a 'exams' field
+        const response = await axios.get(`${backendURL}/students`); // Using axios to make the GET request
+        setStudents(response.data.students); // Assuming response structure has a 'students' field
       } catch (error) {
-        console.error('Error fetching exams:', error);
+        console.error('Error fetching students:', error);
       }
     };
 
-    fetchExams();
+    fetchStudents();
   }, []);
 
   return (
@@ -33,15 +33,15 @@ const ExamsList = () => {
         <nav className="nav-menu">
           <ul>
             <li onClick={() => window.location.href = '/dashboard'}><Folder /> Orar Examene</li>
-            <li className="active"><FileText /> Examene</li>
-            <li onClick={() => window.location.href = '/studentslist'}><User /> Studenți</li>
+            <li onClick={() => window.location.href = '/examslist'}><FileText /> Examene</li>
             <li onClick={() => window.location.href = '/professorlist'}><User /> Profesori</li>
+            <li className="active"><User /> Studenți</li>
           </ul>
         </nav>
       </aside>
 
-      <main className="section exams">
-        <h3>Toate examenele</h3>
+      <main className="section students">
+        <h3>Studenți</h3>
         <div className="search-bar">
           <input type="text" placeholder="Search..." />
           <button type="submit" className="bg-white px-3 py-3">
@@ -51,23 +51,23 @@ const ExamsList = () => {
 
         {/* Table Headers (Columns) */}
         <div className="table-header">
-          <span>Nume Examen</span>      {/* Column for Exam Name */}
-          <span>Data</span>            {/* Column for Date */}
-          <span>Profesor</span>        {/* Column for Professor */}
+          <span>Nume</span>           {/* Column for Name */}
+          <span>Email</span>          {/* Column for Email */}
+          <span>An de studiu</span>   {/* Column for Year of Study */}
         </div>
 
         {/* Table Body (Rows) */}
         <div className="table-body">
-          {exams.length > 0 ? (
-            exams.map((exam) => (
-              <div key={exam._id} className="table-row">
-                <span>{exam.name}</span>         {/* Exam Name */}
-                <span>{exam.date}</span>         {/* Exam Date */}
-                <span>{exam.professor}</span>    {/* Professor Name */}
+          {students.length > 0 ? (
+            students.map((student) => (
+              <div key={student._id} className="table-row">
+                <span>{student.firstName} {student.lastName}</span>  {/* Student Name */}
+                <span>{student.email}</span>  {/* Student Email */}
+                <span>{student.year}</span>  {/* Student Year of Study */}
               </div>
             ))
           ) : (
-            <div>No exams found.</div>
+            <div>No students found.</div>
           )}
         </div>
       </main>
@@ -75,4 +75,4 @@ const ExamsList = () => {
   );
 };
 
-export default ExamsList;
+export default StudentsList;
