@@ -1,143 +1,267 @@
-.exams-page {
+/* General dashboard container */
+.dashboard-container {
     display: flex;
     height: 100vh;
-}
-
-.sidebar {
+  }
+  
+  .sidebar {
     width: 250px;
-    background-color: #0044cc;
+    background-color: #1e2a47;
     color: white;
     display: flex;
     flex-direction: column;
-    align-items: center;
     padding: 20px;
-}
-
-.sidebar .logo img {
-    width: 100px;
-    margin-bottom: 20px;
-}
-
-.sidebar nav ul {
+  }
+  
+  .sidebar-header {
+    text-align: center;
+  }
+  
+  .sidebar-header .logo {
+    width: 60px;
+    height: auto;
+  }
+  
+  .sidebar-header h2 {
+    margin-top: 10px;
+  }
+  
+  .nav-menu {
+    margin-top: 30px;
+  }
+  
+  .nav-menu ul {
     list-style: none;
     padding: 0;
-    width: 100%;
-}
-
-.sidebar nav ul li {
-    padding: 10px 20px;
+  }
+  
+  .nav-menu ul li {
+    padding: 12px;
     cursor: pointer;
-}
-
-.sidebar nav ul li.active {
-    background-color: #003399;
-    border-radius: 4px;
-}
-
-.sidebar .logout {
-    margin-top: auto;
-    background-color: #ff3333;
-    border: none;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.sidebar .logout:hover {
-    background-color: #cc0000;
-}
-
-.content {
-    flex: 1;
-    background-color: #f9f9f9;
-    padding: 20px;
-}
-
-.header {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .nav-menu ul li:hover {
+    background-color: #4451a7;
+  }
+  
+  .nav-menu ul li.active {
+    background-color: #4451a7;
+  }
+  
+  .nav-menu ul li svg {
+    margin-right: 10px;
+  }
+  
+  .search-bar {
+    display: flex;
     align-items: center;
     margin-bottom: 20px;
-}
-
-.header h1 {
-    color: #333;
-}
-
-.header input {
+  }
+  
+  .search-bar input {
+    flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 300px;
-}
-
-.exams-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.exam-item {
-    background: #e0e0e0;
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .search-bar button {
+    padding: 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .search-bar button:hover {
+    background-color: #cfcfcf;
+  }
+  
+  /* Table Styles */
+  .table-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-radius: 4px;
-    position: relative;
-}
-
-.exam-info {
+    padding: 10px 0;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .table-header span {
+    width: 30%;
+    text-align: center;
+  }
+  
+  .table-body {
+    padding: 10px 0;
+  }
+  
+  .table-row {
     display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.exam-icon {
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .table-row span {
+    width: 30%;
+    text-align: center;
+  }
+  
+  .table-row:last-child {
+    border-bottom: none;
+  }
+  
+  .table-row:hover {
+    background-color: #f8f8f8;
+  }
+  
+  /* Section Style */
+  .section.exams {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  h3 {
     font-size: 24px;
-}
-
-.exam-actions {
-    position: relative;
-}
-
-.more-button {
-    background: #0044cc;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.more-button:hover {
-    background: #003399;
-}
-
-.dropdown {
-    position: absolute;
-    top: 35px;
-    right: 0;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: none;
-    flex-direction: column;
-}
-
-.dropdown button {
-    padding: 10px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    text-align: left;
-}
-
-.dropdown button:hover {
-    background: #f0f0f0;
-}
-
-.exam-actions:hover .dropdown {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  /* General dashboard container */
+.dashboard-container {
     display: flex;
-}
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #1e2a47;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .sidebar-header {
+    text-align: center;
+  }
+  
+  .sidebar-header .logo {
+    width: 60px;
+    height: auto;
+  }
+  
+  .sidebar-header h2 {
+    margin-top: 10px;
+  }
+  
+  .nav-menu {
+    margin-top: 30px;
+  }
+  
+  .nav-menu ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .nav-menu ul li {
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .nav-menu ul li:hover {
+    background-color: #4451a7;
+  }
+  
+  .nav-menu ul li.active {
+    background-color: #4451a7;
+  }
+  
+  .nav-menu ul li svg {
+    margin-right: 10px;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .search-bar button {
+    padding: 10px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .search-bar button:hover {
+    background-color: #cfcfcf;
+  }
+  
+  /* Table Styles */
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-weight: 600;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .table-header span {
+    width: 30%;
+    text-align: center;
+  }
+  
+  .table-body {
+    padding: 10px 0;
+  }
+  
+  .table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .table-row span {
+    width: 30%;
+    text-align: center;
+  }
+  
+  .table-row:last-child {
+    border-bottom: none;
+  }
+  
+  .table-row:hover {
+    background-color: #f8f8f8;
+  }
+  
+  /* Section Style */
+  .section.exams {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  

@@ -1,143 +1,471 @@
-.professors-page {
-    display: flex;
-    height: 100vh;
+/* Stiluri pentru containerul principal */
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
+/* Sidebar */
 .sidebar {
-    width: 250px;
-    background-color: #0044cc;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+  width: 250px;
+  background-color: #3d5a80;
+  color: white;
+  display: flex;
+  flex-direction: column;
 }
 
-.sidebar .logo img {
-    width: 100px;
-    margin-bottom: 20px;
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
-.sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    width: 100%;
+.sidebar-header .logo {
+  width: 100px;
+  margin-bottom: 10px;
 }
 
-.sidebar nav ul li {
-    padding: 10px 20px;
-    cursor: pointer;
+.sidebar h2 {
+  font-size: 20px;
+  margin: 0;
 }
 
-.sidebar nav ul li.active {
-    background-color: #003399;
-    border-radius: 4px;
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
 }
 
-.sidebar .logout {
-    margin-top: auto;
-    background-color: #ff3333;
-    border: none;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
+.nav-menu ul li {
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.sidebar .logout:hover {
-    background-color: #cc0000;
+.nav-menu ul li.active,
+.nav-menu ul li:hover {
+  background-color: #98c1d9;
+  color: #293241;
 }
 
-.content {
-    flex: 1;
-    background-color: #f9f9f9;
-    padding: 20px;
+.nav-menu ul li svg {
+  width: 20px;
+  height: 20px;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+/* Logout Button */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 10px 20px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #293241;
+  color: white;
 }
 
-.header h1 {
-    color: #333;
+.sidebar-footer:hover {
+  background-color: #98c1d9;
 }
 
-.header input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 300px;
+/* Conținutul principal */
+.main-content {
+  flex: 1;
+  background-color: #f5f5f5;
+  padding: 20px;
+  overflow-y: auto;
 }
 
+.main-content h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #293241;
+}
+
+/* Bara de căutare */
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #98c1d9;
+  border: none;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #3d5a80;
+}
+
+/* Lista de profesori */
 .professors-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.professor-item {
-    background: #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-radius: 4px;
-    position: relative;
+.professor-card {
+  background-color: white;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .professor-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  font-size: 18px;
+  color: #293241;
 }
 
-.professor-icon {
-    font-size: 24px;
+.professor-actions button {
+  margin-left: 10px;
+  padding: 8px 15px;
+  background-color: #98c1d9;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.professor-actions {
-    position: relative;
+.professor-actions button:hover {
+  background-color: #3d5a80;
 }
 
-.more-button {
-    background: #0044cc;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
+.professor-actions button:nth-child(3) {
+  background-color: #e63946;
 }
 
-.more-button:hover {
-    background: #003399;
+.professor-actions button:nth-child(3):hover {
+  background-color: #d90429;
+}
+/* Stiluri pentru containerul principal */
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
-.dropdown {
-    position: absolute;
-    top: 35px;
-    right: 0;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: none;
-    flex-direction: column;
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #3d5a80;
+  color: white;
+  display: flex;
+  flex-direction: column;
 }
 
-.dropdown button {
-    padding: 10px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    text-align: left;
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
-.dropdown button:hover {
-    background: #f0f0f0;
+.sidebar-header .logo {
+  width: 100px;
+  margin-bottom: 10px;
 }
 
-.professor-actions:hover .dropdown {
-    display: flex;
+.sidebar h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-menu ul li {
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-menu ul li.active,
+.nav-menu ul li:hover {
+  background-color: #98c1d9;
+  color: #293241;
+}
+
+.nav-menu ul li svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Logout Button */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 10px 20px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #293241;
+  color: white;
+}
+
+.sidebar-footer:hover {
+  background-color: #98c1d9;
+}
+
+/* Conținutul principal */
+.main-content {
+  flex: 1;
+  background-color: #f5f5f5;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.main-content h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #293241;
+}
+
+/* Bara de căutare */
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #98c1d9;
+  border: none;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #3d5a80;
+}
+
+/* Lista de profesori */
+.professors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.professor-card {
+  background-color: white;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.professor-info {
+  font-size: 18px;
+  color: #293241;
+}
+
+.professor-actions button {
+  margin-left: 10px;
+  padding: 8px 15px;
+  background-color: #98c1d9;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.professor-actions button:hover {
+  background-color: #3d5a80;
+}
+
+.professor-actions button:nth-child(3) {
+  background-color: #e63946;
+}
+
+.professor-actions button:nth-child(3):hover {
+  background-color: #d90429;
+}
+/* Stiluri pentru containerul principal */
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #3d5a80;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.sidebar-header .logo {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-menu ul li {
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-menu ul li.active,
+.nav-menu ul li:hover {
+  background-color: #98c1d9;
+  color: #293241;
+}
+
+.nav-menu ul li svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Logout Button */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 10px 20px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #293241;
+  color: white;
+}
+
+.sidebar-footer:hover {
+  background-color: #98c1d9;
+}
+
+/* Conținutul principal */
+.main-content {
+  flex: 1;
+  background-color: #f5f5f5;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.main-content h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #293241;
+}
+
+/* Bara de căutare */
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #98c1d9;
+  border: none;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #3d5a80;
+}
+
+/* Lista de profesori */
+.professors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.professor-card {
+  background-color: white;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.professor-info {
+  font-size: 18px;
+  color: #293241;
+}
+
+.professor-actions button {
+  margin-left: 10px;
+  padding: 8px 15px;
+  background-color: #98c1d9;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.professor-actions button:hover {
+  background-color: #3d5a80;
+}
+
+.professor-actions button:nth-child(3) {
+  background-color: #e63946;
+}
+
+.professor-actions button:nth-child(3):hover {
+  background-color: #d90429;
 }
