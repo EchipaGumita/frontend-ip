@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+import '../ForgotPassword.css';
+
+
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
 
@@ -35,7 +38,7 @@ const ForgotPasswordPage = () => {
             onChange={handleChange}
             style={inputStyle}
           />
-          <button type="submit" style={buttonStyle}>
+          <button type="submit" className="button">
             Send email
           </button>
         </form>
@@ -67,7 +70,7 @@ const logoStyle = {
 
 const formContainerStyle = {
   flex: 1,
-  backgroundColor: '#e7eff8',
+  backgroundColor: '#6699cc',
   padding: '30px',
   borderRadius: '8px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -78,13 +81,13 @@ const formTitleStyle = {
   marginBottom: '10px',
   fontSize: '22px',
   fontWeight: 'bold',
-  color: '#003366',
+  color: '#f2f2f2',
 };
 
 const formSubtitleStyle = {
   marginBottom: '20px',
   fontSize: '14px',
-  color: '#555',
+  color: '#f2f2f2',
 };
 
 const inputStyle = {
@@ -97,16 +100,6 @@ const inputStyle = {
   outline: 'none',
 };
 
-const buttonStyle = {
-  width: '100%',
-  padding: '10px',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  backgroundColor: '#003366',
-  color: '#fff',
-  borderRadius: '4px',
-  border: 'none',
-  cursor: 'pointer',
-};
+
 
 export default ForgotPasswordPage;
