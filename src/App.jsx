@@ -5,6 +5,8 @@ import ProfessorList from './pages/ProfessorList';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import StudentsList from './pages/StudentList';
 import EditExam from './pages/EditExam';
+import RequestList from './pages/RequestList';
+import CreateExamForm from './pages/CreateExamForm';
 
 const App = () => {
   return (
@@ -16,6 +18,8 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/studentlist" element={<StudentsList />} />
         <Route path="/edit-exam/:id" element={<EditExam />} />  {/* Dynamic route */}
+        <Route path="/requestlist" element={<RequestList />} />
+        <Route path="/createexam" element={<CreateExamForm />} />
       </Routes>
     </Router>
   );
