@@ -1,6 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 
-const CreateExamForms = () => {
+const CreateExamForm = () => {
   const [formData, setFormData] = useState({
     subject: "",
     mainProfessor: "",
@@ -175,4 +176,4 @@ const styles = {
   button: { width: "100%", padding: "10px", background: "#007BFF", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" },
 };
 
-export default CreateExamPage;
+export default CreateExamForm;
