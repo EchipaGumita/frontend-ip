@@ -1,16 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import { Folder, FileText, User } from 'lucide-react';
+import { Folder, Folders, FileText, User, Users } from 'lucide-react';
 
 const Sidebar = () => {
     const [activeItem, setActiveItem] = useState('');
 
     useEffect(() => {
         const path = window.location.pathname;
-        if (path.includes('dashboard')) {
+        if (path.includes('examslist')) {
             setActiveItem('Orar Examene');
         } else if (path.includes('studentlist')) {
             setActiveItem('Studenți');
+        }else if (path.includes('dashboard')) {
+                setActiveItem('Dashboard');
         } else if (path.includes('professorlist')) {
             setActiveItem('Profesori');
         } else {
@@ -32,8 +34,14 @@ const Sidebar = () => {
             <nav className="nav-menu">
                 <ul>
                     <li 
+                        className={activeItem === 'Dashboard' ? 'active' : ''} 
+                        onClick={() => handleItemClick('Dashboard', '/dashboard')}
+                    >
+                        <Folders /> Dashboard
+                    </li>
+                    <li 
                         className={activeItem === 'Orar Examene' ? 'active' : ''} 
-                        onClick={() => handleItemClick('Orar Examene', '/dashboard')}
+                        onClick={() => handleItemClick('Orar Examene', '/examslist')}
                     >
                         <Folder /> Orar Examene
                     </li>
@@ -47,7 +55,7 @@ const Sidebar = () => {
                         className={activeItem === 'Studenți' ? 'active' : ''} 
                         onClick={() => handleItemClick('Studenți', '/studentlist')}
                     >
-                        <User /> Studenți
+                        <Users /> Studenți
                     </li>
                     <li 
                         className={activeItem === 'Profesori' ? 'active' : ''} 

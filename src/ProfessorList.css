@@ -469,3 +469,28 @@
 .professor-actions button:nth-child(3):hover {
   background-color: #d90429;
 }
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-request-button {
+  background-color: #6699cc;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.add-request-button:hover {
+  background-color: #4451a7;
+}
