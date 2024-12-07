@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import '../ExamsList.css';
-import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2"; // Import the plus icon
 import axios from 'axios'; // Import axios
 import Sidebar from '../components/Sidebar';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -24,11 +24,21 @@ const RequestList = () => {
     fetchExams();
   }, []);
 
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
   return (
     <div className="dashboard-container">
-      <Sidebar/>
+      <Sidebar />
       <main className="section exams">
-        <h3>Toate examenele</h3>
+        <div className="header-bar">
+          <h3>Toate examenele</h3>
+          <button className="add-request-button" onClick={() => handleItemClick('/createexam')}>
+            <HiPlus size={24} />
+          </button>
+        </div>
+
         <div className="search-bar">
           <input type="text" placeholder="Search..." />
           <button type="submit" className="bg-white px-3 py-3">
@@ -38,9 +48,9 @@ const RequestList = () => {
 
         {/* Table Headers (Columns) */}
         <div className="table-header">
-          <span>Nume Examen</span>      {/* Column for Exam Name */}
-          <span>Data</span>            {/* Column for Date */}
-          <span>Profesor</span>        {/* Column for Professor */}
+          <span>Nume Examen</span> {/* Column for Exam Name */}
+          <span>Data</span> {/* Column for Date */}
+          <span>Profesor</span> {/* Column for Professor */}
         </div>
 
         {/* Table Body (Rows) */}
@@ -48,9 +58,9 @@ const RequestList = () => {
           {exams.length > 0 ? (
             exams.map((exam) => (
               <div key={exam._id} className="table-row">
-                <span>{exam.name}</span>         {/* Exam Name */}
-                <span>{exam.date}</span>         {/* Exam Date */}
-                <span>{exam.professor}</span>    {/* Professor Name */}
+                <span>{exam.name}</span> {/* Exam Name */}
+                <span>{exam.date}</span> {/* Exam Date */}
+                <span>{exam.professor}</span> {/* Professor Name */}
               </div>
             ))
           ) : (
