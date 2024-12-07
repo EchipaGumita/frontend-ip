@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import '../Dashboard.css';
-import { Folder, FileText, User } from 'lucide-react';
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
 import Sidebar from '../components/Sidebar';
