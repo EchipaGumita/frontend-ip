@@ -14,6 +14,7 @@ import EditProfessor from './pages/EditProfessor';
 import EditStudent from './pages/EditStudent';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import CreateClassForm from './pages/CreateClassForm';
+import CreateExamRequest from './pages/CreateExamRequest';
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/edit-student/:id" element={<EditStudent />} />  {/* Dynamic route */}
         <Route path="/createclass" element={<CreateClassForm />} />
         <Route path="/resetpassword" element={<ResetPasswordPage />} />
+        <Route path="/createexamrequest" element={<CreateExamRequest />} />
 
 
       </Routes>
