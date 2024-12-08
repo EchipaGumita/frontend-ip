@@ -35,8 +35,8 @@ const CreateExamForm = () => {
         borderRadius: "8px",
       }}
     >
-      <h2 style={{ textAlign: "center", color: "#003366" }}>Creare Examen</h2>
-      <p style={{ textAlign: "center", color: "#666" }}>Creare examen nou.</p>
+      <h2 style={{ textAlign: "center", color: "#003366" }}>Creare Request Examen</h2>
+      <p style={{ textAlign: "center", color: "#666" }}>Creare request examen nou.</p>
       <form onSubmit={handleSubmit}>
         {/* Materie */}
         <div style={{ marginBottom: "15px" }}>

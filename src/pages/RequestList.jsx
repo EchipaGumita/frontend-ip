@@ -47,10 +47,7 @@ const RequestList = () => {
       <main className="section exams">
         <div className="header-bar">
           <h3>Toate examenele</h3>
-          <button
-            className="add-request-button"
-            onClick={() => window.location.href = '/createexam'}
-          >
+          <button className="add-request-button" onClick={() => handleItemClick('/createexamrequest')}>
             <HiPlus size={24} />
           </button>
         </div>
