@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 
 const CreateClassForm = () => {
@@ -18,7 +19,7 @@ const CreateClassForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
-    alert("Examenul a fost creat cu succes!");
+    alert("Sala a fost creată cu succes!");
     // merge adaugat un apel la API aici pentru a salva datele
   };
 
