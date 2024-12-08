@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 
 const EditProfessor = () => {
@@ -117,11 +118,11 @@ const mainContainerStyle = {
   fontFamily: "Arial, sans-serif",
 };
 
-const pageTitleStyle = {
-  fontSize: "24px",
-  color: "#555",
-  marginBottom: "20px",
-};
+// const pageTitleStyle = {
+//   fontSize: "24px",
+//   color: "#555",
+//   marginBottom: "20px",
+// };
 
 const formStyle = {
   backgroundColor: "#dce3f7",
@@ -152,14 +153,8 @@ const inputStyle = {
   borderRadius: "4px",
   border: "1px solid #ccc",
   outline: "none",
-    marginBottom: "15px",
-    padding: "10px",
-    fontSize: "14px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    outline: "none",
-    backgroundColor: "#ffffff", // Fundal alb
-    color: "#000000",          // Text negru pentru contrast
+  backgroundColor: "#ffffff", // Fundal alb
+  color: "#000000",          // Text negru pentru contrast
   };
 
 const buttonStyle = {

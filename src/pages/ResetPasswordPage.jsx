@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 
 const ResetPasswordPage = () => {
@@ -25,11 +26,10 @@ const ResetPasswordPage = () => {
     <div style={containerStyle}>
       <div style={logoContainerStyle}>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/e/e3/USV_Logo.png"
+          src="../../src/assets/logo usv.png"
           alt="USV Logo"
           style={logoStyle}
         />
-        <h2 style={universityNameStyle}>Universitatea „Ștefan cel Mare” din Suceava</h2>
       </div>
 
       <div style={formContainerStyle}>
@@ -39,7 +39,7 @@ const ResetPasswordPage = () => {
           <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="New password"
             value={formData.password}
             onChange={handleChange}
             style={inputStyle}
@@ -47,7 +47,7 @@ const ResetPasswordPage = () => {
           <input
             type="password"
             name="confirmPassword"
-            placeholder="Confirm password"
+            placeholder="Confirm new password"
             value={formData.confirmPassword}
             onChange={handleChange}
             style={inputStyle}
