@@ -1,9 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import { Folder, Folders, FileText, User, Users } from 'lucide-react';
+import { Folder, Folders, FileText, User, Users, CircleUserRound } from 'lucide-react';
+import { DropdownMenu } from './DropdownMenu.jsx';
+
 
 const Sidebar = () => {
     const [activeItem, setActiveItem] = useState('');
+    //const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+
 
     useEffect(() => {
         const path = window.location.pathname;
@@ -24,6 +28,20 @@ const Sidebar = () => {
         setActiveItem(itemName);
         window.location.href = path;
     };
+
+    // const toggleDropdown = () => {
+    //     setIsDropdownOpen(!isDropdownOpen);
+    // };
+
+    // const handleResetPassword = () => {
+    //     // Logic for resetting the password
+    //     alert("Reset Password clicked!");
+    // };
+
+    // const handleLogout = () => {
+    //     // Logic for logging out
+    //     alert("Logout clicked!");
+    // };
 
     return (
         <aside className="sidebar">
@@ -63,8 +81,28 @@ const Sidebar = () => {
                     >
                         <User /> Profesori
                     </li>
+                    <li>
+                        <DropdownMenu />
+                    </li>
                 </ul>
             </nav>
+            <div className="sidebar-footer">
+                <p>Version: 1.0.0</p>
+                <p>© 2024 USV. All rights reserved.</p>
+            </div>
+            {/* User Dropdown
+            <div className="user-dropdown">
+                <div className="user-info" onClick={toggleDropdown}>
+                    <span className="user-name">John Doe</span>
+                    {isDropdownOpen ? <FaChevronUp /> : <FaChevronDown />}
+                </div>
+                {isDropdownOpen && (
+                    <ul className="dropdown-menu">
+                        <li onClick={handleResetPassword}>Reset Password</li>
+                        <li onClick={handleLogout}>Logout</li>
+                    </ul>
+                )}
+            </div> */}
         </aside>
     );
 };
