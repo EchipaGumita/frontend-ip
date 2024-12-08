@@ -1,28 +1,92 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const CreateExamForm = () => {
   const [formData, setFormData] = useState({
     subject: "",
+    examDate: "", // date part
+    examTime: "", // time part
+    examDuration: "",
+    classroom: "",
+    hour: "", // this will be managed separately
     mainProfessor: "",
-    supervisingProfessors: "",
+    secondaryProfessor: "",
     faculty: "",
-    groups: "",
+    group: "",
   });
+  const [professors, setProfessors] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [classrooms, setClassrooms] = useState([]);
+  const [studentId, setStudentId] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const professorRes = await axios.get(`${backendURL}/professor`);
+        setProfessors(professorRes.data.professors || []);
+        const groupRes = await axios.get(`${backendURL}/groups`);
+        setGroups(groupRes.data.groups || []);
+        const classroomRes = await axios.get(`${backendURL}/classroom`);
+        setClassrooms(classroomRes.data.classrooms || []);
+        const token = localStorage.getItem("token");
+        if (token) {
+          // Decode the token to access the payload
+          const decodedToken = jwtDecode(token);
+          console.log("Decoded Token:", decodedToken);
+
+          // Extract the uniqueId from the payload
+          setStudentId(decodedToken.uniqueId);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === "examDate") {
+      const [date, time] = value.split("T");
+      setFormData((prevState) => ({
+        ...prevState,
+        examDate: date,
+        examTime: time,
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data submitted:", formData);
-    alert("Examenul a fost creat cu succes!");
-    // merge adaugat un apel la API aici pentru a salva datele
+
+    const requestData = {
+      studentUniqueId: studentId,
+      subject: formData.subject,
+      examDate: formData.examDate,
+      examDuration: parseInt(formData.examDuration, 10),
+      classroom: formData.classroom,
+      hour: formData.examTime, // use the separate hour part
+      mainProfessor: formData.mainProfessor,
+      secondaryProfessor: formData.secondaryProfessor || undefined,
+      faculty: formData.faculty,
+      group: formData.group,
+    };
+
+    try {
+      const response = await axios.post(`${backendURL}/exam-request`, requestData);
+      alert("Examenul a fost creat cu succes!");
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error creating exam:", error);
+      alert("Eroare la crearea examenului.");
+    }
   };
 
   return (
@@ -58,7 +122,71 @@ const CreateExamForm = () => {
           />
         </div>
 
-        {/* Profesor Principal */}
+        {/* Data Examen */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="examDate">Data Examenului:</label>
+          <input
+            type="datetime-local"
+            id="examDate"
+            name="examDate"
+            value={`${formData.examDate}T${formData.examTime}`}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+
+        {/* Durată Examen */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="examDuration">Durată (minute):</label>
+          <input
+            type="number"
+            id="examDuration"
+            name="examDuration"
+            value={formData.examDuration}
+            onChange={handleChange}
+            placeholder="Introduceți durata"
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+
+        {/* Classroom */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="classroom">Sala:</label>
+          <select
+            id="classroom"
+            name="classroom"
+            value={formData.classroom}
+            onChange={handleChange}
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          >
+            <option value="" disabled>Selectați sala</option>
+            {classrooms.map((classroom) => (
+              <option key={classroom._id} value={classroom._id}>
+                {classroom.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Main Professor */}
         <div style={{ marginBottom: "15px" }}>
           <label htmlFor="mainProfessor">Profesor Principal:</label>
           <select
@@ -74,25 +202,25 @@ const CreateExamForm = () => {
               border: "1px solid #ccc",
             }}
           >
-            <option value="" disabled>
-              Selectați profesorul
-            </option>
-            <option value="prof1">Prof. Ion Popescu</option>
-            <option value="prof2">Prof. Maria Ionescu</option>
-            <option value="prof3">Prof. Alexandru Vasile</option>
+            <option value="" disabled>Selectați profesorul</option>
+            {professors.map((professor) => (
+              <option key={professor._id} value={professor._id}>
+                {professor.firstName} {professor.lastName}
+              </option>
+            ))}
           </select>
         </div>
 
-        {/* Profesori Supraveghetori */}
+        {/* Faculty */}
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="supervisingProfessors">Profesori Supraveghetori:</label>
+          <label htmlFor="faculty">Facultate:</label>
           <input
             type="text"
-            id="supervisingProfessors"
-            name="supervisingProfessors"
-            value={formData.supervisingProfessors}
+            id="faculty"
+            name="faculty"
+            value={formData.faculty}
             onChange={handleChange}
-            placeholder="Introduceți profesorii supraveghetori"
+            placeholder="Introduceți facultatea"
             required
             style={{
               width: "100%",
@@ -103,13 +231,13 @@ const CreateExamForm = () => {
           />
         </div>
 
-        {/* Facultate */}
+        {/* Group */}
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="faculty">Facultate:</label>
+          <label htmlFor="group">Grupă:</label>
           <select
-            id="faculty"
-            name="faculty"
-            value={formData.faculty}
+            id="group"
+            name="group"
+            value={formData.group}
             onChange={handleChange}
             required
             style={{
@@ -119,33 +247,13 @@ const CreateExamForm = () => {
               border: "1px solid #ccc",
             }}
           >
-            <option value="" disabled>
-              Selectați facultatea
-            </option>
-            <option value="facultate1">Facultatea de Matematică</option>
-            <option value="facultate2">Facultatea de Informatică</option>
-            <option value="facultate3">Facultatea de Fizică</option>
+            <option value="" disabled>Selectați grupa</option>
+            {groups.map((group) => (
+              <option key={group._id} value={group._id}>
+                {group.name}
+              </option>
+            ))}
           </select>
-        </div>
-
-        {/* Grupe */}
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="groups">Grupă/e:</label>
-          <input
-            type="text"
-            id="groups"
-            name="groups"
-            value={formData.groups}
-            onChange={handleChange}
-            placeholder="Introduceți grupa/le"
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          />
         </div>
 
         {/* Confirmare */}
@@ -167,6 +275,5 @@ const CreateExamForm = () => {
     </div>
   );
 };
-
 
 export default CreateExamForm;
