@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import '../Dashboard.css';
-import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
 import Sidebar from '../components/Sidebar';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -24,13 +24,28 @@ const Dashboard = () => {
     fetchExams();
   }, []);
 
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
   return (
     <div className="dashboard-container">
       
       <Sidebar/>
       <main className="content">
         <section className="section exams">
-          <h3>Orar examene</h3>
+          <div className="header-bar">
+            <h3>Orar examene</h3>
+            <button className="add-request-button" onClick={() => handleItemClick('/createexam')}>
+              <HiPlus size={24} />
+              AE
+            </button>
+            <button className="add-request-button" onClick={() => handleItemClick('/createclass')}>
+              <HiPlus size={24} />
+              AS
+            </button>
+          </div>
+
           <div className="search-bar">
             <input type="text" placeholder="Search..." />
             <button type="submit" className="bg-white px-3 py-3">
