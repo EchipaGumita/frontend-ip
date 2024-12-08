@@ -82,6 +82,7 @@ const Sidebar = () => {
                         <User /> Profesori
                     </li>
                     <li>
+                        <CircleUserRound />
                         <DropdownMenu />
                     </li>
                 </ul>
