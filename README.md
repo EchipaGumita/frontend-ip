@@ -1,6 +1,3 @@
-Certainly! Here's the markdown ready for copying and pasting:
-
-```markdown
 # 🎓 Exam Scheduler Frontend - Simplify Your University Exam Management! 📅
 
 The **Exam Scheduler Frontend** is a robust, user-friendly web interface tailored for interacting with the Exam Scheduler API. This React-based application enhances the experience of students, professors, and administrators by providing an intuitive and responsive platform for managing exams, requests, and schedules.
