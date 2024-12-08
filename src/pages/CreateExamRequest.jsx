@@ -65,20 +65,37 @@ const CreateExamForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Convert the hour to 12-hour format with AM/PM
+    const [hour, minute] = formData.examTime.split(':');
+    let hourInt = parseInt(hour, 10);
+    let amOrPm = 'AM';
+  
+    if (hourInt >= 12) {
+      amOrPm = 'PM';
+      if (hourInt > 12) {
+        hourInt -= 12; // Convert to 12-hour format
+      }
+    } else if (hourInt === 0) {
+      hourInt = 12; // Midnight case (00:xx is 12:xx AM)
+    }
+  
+    // Create a formatted time string with AM/PM
+    const formattedTime = `${hourInt}:${minute} ${amOrPm}`;
+  
     const requestData = {
       studentUniqueId: studentId,
       subject: formData.subject,
       examDate: formData.examDate,
       examDuration: parseInt(formData.examDuration, 10),
       classroom: formData.classroom,
-      hour: formData.examTime, // use the separate hour part
+      hour: formattedTime, // Use formatted time with AM/PM
       mainProfessor: formData.mainProfessor,
       secondaryProfessor: formData.secondaryProfessor || undefined,
       faculty: formData.faculty,
       group: formData.group,
     };
-
+  
     try {
       const response = await axios.post(`${backendURL}/exam-request`, requestData);
       alert("Examenul a fost creat cu succes!");

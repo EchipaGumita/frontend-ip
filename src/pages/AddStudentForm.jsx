@@ -1,13 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
-
+import axios from 'axios'; // Import axios
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const AddStudentForm = () => {
+  // Initial state matching the required post structure
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
+    year: 1, // Default year set to 1
     faculty: '',
-    profile: '',
+    major: '',
+    gender: '', // Added for gender selection
   });
 
   const handleChange = (e) => {
@@ -18,7 +23,25 @@ const AddStudentForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Add your API call or data submission logic here
+    // Post the form data to the backend
+    axios.post(`${backendURL}/students`, formData)
+      .then(response => {
+        console.log('Student added successfully:', response.data);
+        // Optionally clear the form after submission
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          year: 1,
+          faculty: '',
+          major: '',
+          gender: '',
+        });
+      })
+      .catch(error => {
+        console.error('There was an error adding the student:', error);
+      });
   };
 
   return (
@@ -29,9 +52,18 @@ const AddStudentForm = () => {
 
         <input
           type="text"
-          name="name"
+          name="firstName"
+          placeholder="Prenume"
+          value={formData.firstName}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <input
+          type="text"
+          name="lastName"
           placeholder="Nume"
-          value={formData.name}
+          value={formData.lastName}
           onChange={handleChange}
           style={inputStyle}
         />
@@ -61,14 +93,14 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
-          <option value="Facultatea de Informatica">Facultatea de Informatica</option>
-          <option value="Facultatea de Litere">Facultatea de Litere</option>
+          <option value="calculatoare">CALCULATOARE</option>
+          <option value="esm">ESM</option>
           {/* Add more options as needed */}
         </select>
 
         <select
-          name="profile"
-          value={formData.profile}
+          name="major"
+          value={formData.major}
           onChange={handleChange}
           style={inputStyle}
         >
@@ -76,6 +108,17 @@ const AddStudentForm = () => {
           <option value="Informatica">Informatica</option>
           <option value="Litere">Litere</option>
           {/* Add more options as needed */}
+        </select>
+
+        <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          style={inputStyle}
+        >
+          <option value="">Gen</option>
+          <option value="male">Masculin</option>
+          <option value="female">Feminin</option>
         </select>
 
         <button type="submit" style={buttonStyle}>

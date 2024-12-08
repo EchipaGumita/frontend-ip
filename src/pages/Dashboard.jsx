@@ -4,6 +4,8 @@ import '../Dashboard.css';
 import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
 import Sidebar from '../components/Sidebar';
+import ExamDropdown from '../components/ExamDropDown'; // Import the new ExamDropdown component
+
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
@@ -24,14 +26,18 @@ const Dashboard = () => {
     fetchExams();
   }, []);
 
+  // Function to remove an exam from the state after deletion
+  const removeExamFromState = (examId) => {
+    setExams(exams.filter(exam => exam._id !== examId));
+  };
+
   const handleItemClick = (path) => {
     window.location.href = path;
-};
+  };
 
   return (
     <div className="dashboard-container">
-      
-      <Sidebar/>
+      <Sidebar />
       <main className="content">
         <section className="section exams">
           <div className="header-bar">
@@ -62,6 +68,7 @@ const Dashboard = () => {
             <span>Data</span>           {/* Column for Exam Date */}
             <span>Ora</span>            {/* Column for Exam Hour */}
             <span>Sala</span>           {/* Column for Classroom */}
+            <span>Actiuni</span>        {/* Column for Actions */}
           </div>
 
           {/* Table Body (Rows) */}
@@ -80,6 +87,9 @@ const Dashboard = () => {
                   <span>{new Date(exam.date).toLocaleDateString()}</span>   {/* Exam Date */}
                   <span>{exam.hour}</span>  {/* Exam Hour */}
                   <span>{exam.classroom?.name || 'No classroom assigned'}</span>   {/* Classroom */}
+                  <span>
+                    <ExamDropdown examId={exam._id} onDelete={removeExamFromState} />
+                  </span>
                 </div>
               ))
             ) : (

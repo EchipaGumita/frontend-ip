@@ -1,13 +1,14 @@
-
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
-import '../ExamsList.css';
-import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+import '../Dashboard.css';
+import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
 import axios from 'axios'; // Import axios
 import Sidebar from '../components/Sidebar';
+import ExamDropdown from '../components/ExamDropDown'; // Import the new ExamDropdown component
+
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-const ExamsList = () => {
+const Dashboard = () => {
   // State to store exams
   const [exams, setExams] = useState([]);
 
@@ -15,8 +16,8 @@ const ExamsList = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await axios.get(`${backendURL}/exams`); // Using axios to make the GET request
-        setExams(response.data.exams); // Assuming response structure has a 'exams' field
+        const response = await axios.get(`${backendURL}/exam`); // Using axios to make the GET request
+        setExams(response.data.exams); // Assuming response structure has an 'exams' field
       } catch (error) {
         console.error('Error fetching exams:', error);
       }
@@ -25,42 +26,80 @@ const ExamsList = () => {
     fetchExams();
   }, []);
 
+  // Function to remove an exam from the state after deletion
+  const removeExamFromState = (examId) => {
+    setExams(exams.filter(exam => exam._id !== examId));
+  };
+
+  const handleItemClick = (path) => {
+    window.location.href = path;
+  };
+
   return (
     <div className="dashboard-container">
-      <Sidebar/>
-      <main className="section exams">
-        <h3>Toate examenele</h3>
-        <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <button type="submit" className="bg-white px-3 py-3">
-            <HiMiniMagnifyingGlass />
-          </button>
-        </div>
+      <Sidebar />
+      <main className="content">
+        <section className="section exams">
+          <div className="header-bar">
+            <h3>Orar examene</h3>
+            <button className="add-request-button" onClick={() => handleItemClick('/createexam')}>
+              <HiPlus size={24} />
+              AE
+            </button>
+            <button className="add-request-button" onClick={() => handleItemClick('/createclass')}>
+              <HiPlus size={24} />
+              AS
+            </button>
+          </div>
 
-        {/* Table Headers (Columns) */}
-        <div className="table-header">
-          <span>Nume Examen</span>      {/* Column for Exam Name */}
-          <span>Data</span>            {/* Column for Date */}
-          <span>Profesor</span>        {/* Column for Professor */}
-        </div>
+          <div className="search-bar">
+            <input type="text" placeholder="Search..." />
+            <button type="submit" className="bg-white px-3 py-3">
+              <HiMiniMagnifyingGlass />
+            </button>
+          </div>
 
-        {/* Table Body (Rows) */}
-        <div className="table-body">
-          {exams.length > 0 ? (
-            exams.map((exam) => (
-              <div key={exam._id} className="table-row">
-                <span>{exam.name}</span>         {/* Exam Name */}
-                <span>{exam.date}</span>         {/* Exam Date */}
-                <span>{exam.professor}</span>    {/* Professor Name */}
-              </div>
-            ))
-          ) : (
-            <div>No exams found.</div>
-          )}
-        </div>
+          {/* Table Headers (Columns) */}
+          <div className="table-header">
+            <span>Materie</span>         {/* Column for Subject */}
+            <span>Grupa</span>          {/* Column for Group */}
+            <span>Examiner</span>       {/* Column for Main Professor */}
+            <span>Assistant</span>      {/* Column for Secondary Professor */}
+            <span>Data</span>           {/* Column for Exam Date */}
+            <span>Ora</span>            {/* Column for Exam Hour */}
+            <span>Sala</span>           {/* Column for Classroom */}
+            <span>Actiuni</span>        {/* Column for Actions */}
+          </div>
+
+          {/* Table Body (Rows) */}
+          <div className="table-body">
+            {exams.length > 0 ? (
+              exams.map((exam) => (
+                <div key={exam._id} className="table-row">
+                  <span>{exam.subject}</span>          {/* Subject (Materie) */}
+                  <span>{exam.group?.name || 'No group assigned'}</span>   {/* Group Name */}
+                  <span>{exam.mainProfessor?.firstName} {exam.mainProfessor?.lastName || 'N/A'}</span>  {/* Main Professor */}
+                  <span>
+                    {exam.secondaryProfessor
+                      ? `${exam.secondaryProfessor.firstName} ${exam.secondaryProfessor.lastName}`
+                      : 'N/A'}
+                  </span>  {/* Secondary Professor */}
+                  <span>{new Date(exam.date).toLocaleDateString()}</span>   {/* Exam Date */}
+                  <span>{exam.hour}</span>  {/* Exam Hour */}
+                  <span>{exam.classroom?.name || 'No classroom assigned'}</span>   {/* Classroom */}
+                  <span>
+                    <ExamDropdown examId={exam._id} onDelete={removeExamFromState} />
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div>No exams found.</div>
+            )}
+          </div>
+        </section>
       </main>
     </div>
   );
 };
 
-export default ExamsList;
+export default Dashboard;
