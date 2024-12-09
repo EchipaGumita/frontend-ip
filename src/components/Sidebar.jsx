@@ -2,14 +2,39 @@
 import React, { useState, useEffect } from 'react';
 import { Folder, Folders, FileText, User, Users, CircleUserRound } from 'lucide-react';
 import { DropdownMenu } from './DropdownMenu.jsx';
-
+import { jwtDecode } from 'jwt-decode';
 
 const Sidebar = () => {
     const [activeItem, setActiveItem] = useState('');
+    const [userRole, setUserRole] = useState(null);
     //const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
-
+    const getUserRole = () => {
+        const token = localStorage.getItem('token');
+        if (!token) return null;
+    
+        try {
+          const decodedToken = jwtDecode(token);
+          const { uniqueId } = decodedToken;
+          const parts = uniqueId.split('-');
+          if (parts.length !== 3) {
+            console.error('Invalid token format');
+            return null;
+          }
+          const [, middle] = parts;
+          if (middle.length === 1 && !isNaN(middle)) {
+            return 'student';
+          }
+          if (middle.length === 3 && isNaN(middle)) {
+            return 'professor';
+          }
+        } catch (error) {
+          console.error('Error decoding token:', error);
+        }
+        return null;
+      };
 
     useEffect(() => {
+        setUserRole(getUserRole());
         const path = window.location.pathname;
         if (path.includes('examslist')) {
             setActiveItem('Orar Examene');
@@ -19,6 +44,9 @@ const Sidebar = () => {
                 setActiveItem('Dashboard');
         } else if (path.includes('professorlist')) {
             setActiveItem('Profesori');
+        }
+        else if (path.includes('Vizualizare examene')) {
+            setActiveItem('Vizualizare examene');
         } else {
             setActiveItem('Requests');
         }
@@ -50,17 +78,24 @@ const Sidebar = () => {
                         <Folder /> Orar Examene
                     </li>
                     <li 
+                        className={activeItem === 'Vizualizare examene' ? 'active' : ''} 
+                        onClick={() => handleItemClick('Vizualizare examene', '/viewexamstudent')}
+                    >
+                        <Folder /> Vizualizare examene
+                    </li>
+                    <li 
                         className={activeItem === 'Requests' ? 'active' : ''} 
                         onClick={() => handleItemClick('Requests', '/requestlist')}
                     >
                         <FileText /> Requests
                     </li>
+                    {userRole === 'professor' && (
                     <li 
                         className={activeItem === 'Studenți' ? 'active' : ''} 
                         onClick={() => handleItemClick('Studenți', '/studentlist')}
                     >
                         <Users /> Studenți
-                    </li>
+                    </li>)}
                     <li 
                         className={activeItem === 'Profesori' ? 'active' : ''} 
                         onClick={() => handleItemClick('Profesori', '/professorlist')}

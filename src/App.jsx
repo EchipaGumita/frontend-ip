@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from '../src/pages/LoginPage';
-import Dashboard from '../src/pages/Dashboard';
+import ProtectedRoute from '../middleware/ProtecteRoute'; // Ensure this path is correct
+import Login from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
 import ProfessorList from './pages/ProfessorList';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import StudentsList from './pages/StudentList';
@@ -15,29 +16,45 @@ import EditStudent from './pages/EditStudent';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import CreateClassForm from './pages/CreateClassForm';
 import CreateExamRequest from './pages/CreateExamRequest';
+import ViewExamStudent from './pages/viewExamStudent';
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Login />} />
+        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/resetpassword" element={<ResetPasswordPage />} />
+
+        {/* Protected Routes for Students */}
+        <Route element={<ProtectedRoute allowedRoles={['student']} />}>
+          <Route path="/viewexamstudent" element={<ViewExamStudent />} />
+        </Route>
+
+        {/* Protected Routes for Professors */}
+        <Route element={<ProtectedRoute allowedRoles={['professor']} />}>
+
+          
+          <Route path="/createexam" element={<CreateExamForm />} />
+          <Route path="/addprofessor" element={<AddProfessorForm />} />
+          <Route path="/edit-professor/:id" element={<EditProfessor />} />
+          <Route path="/studentlist" element={<StudentsList />} />
+        </Route>
+
+        {/* Shared Protected Routes */}
+        <Route element={<ProtectedRoute allowedRoles={['student', 'professor']} />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/professorlist" element={<ProfessorList />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/studentlist" element={<StudentsList />} />
-        <Route path="/edit-exam/:id" element={<EditExam />} />  {/* Dynamic route */}
-        <Route path="/requestlist" element={<RequestList />} />
-        <Route path="/createexam" element={<CreateExamForm />} />
-        <Route path="/examslist" element={<ExamsList />} />
-        <Route path="/addprofessor" element={<AddProfessorForm />} />
-        <Route path="/addstudent" element={<AddStudentForm />} />
-        <Route path="/edit-professor/:id" element={<EditProfessor />} />  {/* Dynamic route */}
-        <Route path="/edit-student/:id" element={<EditStudent />} />  {/* Dynamic route */}
-        <Route path="/createclass" element={<CreateClassForm />} />
-        <Route path="/resetpassword" element={<ResetPasswordPage />} />
-        <Route path="/createexamrequest" element={<CreateExamRequest />} />
-
-
+          <Route path="/edit-exam/:id" element={<EditExam />} />
+          <Route path="/examslist" element={<ExamsList />} />
+          <Route path="/requestlist" element={<RequestList />} />
+          <Route path="/addstudent" element={<AddStudentForm />} />
+          <Route path="/edit-student/:id" element={<EditStudent />} />
+          <Route path="/createclass" element={<CreateClassForm />} />
+          <Route path="/createexamrequest" element={<CreateExamRequest />} />
+        </Route>
       </Routes>
     </Router>
   );

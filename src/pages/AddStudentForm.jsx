@@ -97,6 +97,7 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
+
           <option value="calculatoare">Calculatoare</option>
           <option value="esm">ESM</option>
           {/* Add more options as needed */}

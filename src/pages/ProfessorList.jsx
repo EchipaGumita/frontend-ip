@@ -4,14 +4,41 @@ import '../ProfessorList.css';
 import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2"; // Import the plus icon
 import axios from 'axios'; // Import axios
 import Sidebar from '../components/Sidebar';
+import { jwtDecode } from 'jwt-decode';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const ProfessorList = () => {
   // State to store professors
   const [professors, setProfessors] = useState([]);
+  const [userRole, setUserRole] = useState(null);
+  const getUserRole = () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+      const decodedToken = jwtDecode(token);
+      const { uniqueId } = decodedToken;
+      const parts = uniqueId.split('-');
+      if (parts.length !== 3) {
+        console.error('Invalid token format');
+        return null;
+      }
+      const [, middle] = parts;
+      if (middle.length === 1 && !isNaN(middle)) {
+        return 'student';
+      }
+      if (middle.length === 3 && isNaN(middle)) {
+        return 'professor';
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
+    return null;
+  };
 
   // Fetch professors data when the component mounts
   useEffect(() => {
+    setUserRole(getUserRole());
     const fetchProfessors = async () => {
       try {
         const response = await axios.get(`${backendURL}/professor`); // Using axios to make the GET request
@@ -35,9 +62,9 @@ const ProfessorList = () => {
       <main className="section professors">
         <div className="header-bar">
           <h3>Profesori</h3>
-          <button className="add-request-button" onClick={() => handleItemClick('/addprofessor')}>
+          {userRole === 'professor' && (<button className="add-request-button" onClick={() => handleItemClick('/addprofessor')}>
             <HiPlus size={24} />
-          </button>
+          </button>)}
         </div>
 
         <div className="search-bar">
