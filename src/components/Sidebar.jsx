@@ -29,20 +29,6 @@ const Sidebar = () => {
         window.location.href = path;
     };
 
-    // const toggleDropdown = () => {
-    //     setIsDropdownOpen(!isDropdownOpen);
-    // };
-
-    // const handleResetPassword = () => {
-    //     // Logic for resetting the password
-    //     alert("Reset Password clicked!");
-    // };
-
-    // const handleLogout = () => {
-    //     // Logic for logging out
-    //     alert("Logout clicked!");
-    // };
-
     return (
         <aside className="sidebar">
             <div className="sidebar-header">
@@ -89,21 +75,8 @@ const Sidebar = () => {
             </nav>
             <div className="sidebar-footer">
                 <p>Version: 1.0.0</p>
-                <p>© 2024 USV. All rights reserved.</p>
+                <p>© 2024 Echipa Gumita. All rights reserved.</p>
             </div>
-            {/* User Dropdown
-            <div className="user-dropdown">
-                <div className="user-info" onClick={toggleDropdown}>
-                    <span className="user-name">John Doe</span>
-                    {isDropdownOpen ? <FaChevronUp /> : <FaChevronDown />}
-                </div>
-                {isDropdownOpen && (
-                    <ul className="dropdown-menu">
-                        <li onClick={handleResetPassword}>Reset Password</li>
-                        <li onClick={handleLogout}>Logout</li>
-                    </ul>
-                )}
-            </div> */}
         </aside>
     );
 };
