@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const CreateExamForm = () => {
   const [formData, setFormData] = useState({
     subject: "",
-    examDate: "", // date part
-    examTime: "", // time part
+    examDate: new Date(), // Using Date object for better handling
+    examTime: "",
     examDuration: "",
     classroom: "",
-    hour: "", // this will be managed separately
+    hour: "",
     mainProfessor: "",
     secondaryProfessor: "",
     faculty: "",
@@ -20,22 +23,26 @@ const CreateExamForm = () => {
   const [groups, setGroups] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
   const [studentId, setStudentId] = useState("");
+  const [bookedDates, setBookedDates] = useState([]);
+  const [isDateBooked, setIsDateBooked] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const professorRes = await axios.get(`${backendURL}/professor`);
         setProfessors(professorRes.data.professors || []);
+
         const groupRes = await axios.get(`${backendURL}/groups`);
         setGroups(groupRes.data.groups || []);
+
         const classroomRes = await axios.get(`${backendURL}/classroom`);
-        setClassrooms(classroomRes.data.classrooms || []);
+        const allClassrooms = classroomRes.data.classrooms || [];
+        setClassrooms(allClassrooms);
+
+        // Decode token to access student ID
         const token = localStorage.getItem("token");
         if (token) {
-          // Decode the token to access the payload
           const decodedToken = jwtDecode(token);
-          console.log("Decoded Token:", decodedToken);
-
-          // Extract the uniqueId from the payload
           setStudentId(decodedToken.uniqueId);
         }
       } catch (error) {
@@ -46,27 +53,46 @@ const CreateExamForm = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (formData.classroom && formData.examDate) {
+      const classroom = classrooms.find((cls) => cls._id === formData.classroom);
+      if (classroom) {
+        const bookedDatesList = classroom.booked_slots.map((slot) => new Date(slot.date).toDateString());
+        setBookedDates(bookedDatesList);
+
+        if (bookedDatesList.includes(formData.examDate.toDateString())) {
+          setIsDateBooked(true);
+        } else {
+          setIsDateBooked(false);
+        }
+      }
+    }
+  }, [formData.classroom, formData.examDate, classrooms]);
+
+  const handleDateChange = (date) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      examDate: date,
+    }));
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "examDate") {
-      const [date, time] = value.split("T");
-      setFormData((prevState) => ({
-        ...prevState,
-        examDate: date,
-        examTime: time,
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Convert the hour to 12-hour format with AM/PM
+    // Check if the selected date is already booked
+    if (isDateBooked) {
+      alert("Data selectată este deja rezervată. Vă rugăm să selectați o altă dată.");
+      return; // Prevent form submission
+    }
+  
     const [hour, minute] = formData.examTime.split(':');
     let hourInt = parseInt(hour, 10);
     let amOrPm = 'AM';
@@ -74,13 +100,12 @@ const CreateExamForm = () => {
     if (hourInt >= 12) {
       amOrPm = 'PM';
       if (hourInt > 12) {
-        hourInt -= 12; // Convert to 12-hour format
+        hourInt -= 12;
       }
     } else if (hourInt === 0) {
-      hourInt = 12; // Midnight case (00:xx is 12:xx AM)
+      hourInt = 12; // Midnight case
     }
   
-    // Create a formatted time string with AM/PM
     const formattedTime = `${hourInt}:${minute} ${amOrPm}`;
   
     const requestData = {
@@ -89,7 +114,7 @@ const CreateExamForm = () => {
       examDate: formData.examDate,
       examDuration: parseInt(formData.examDuration, 10),
       classroom: formData.classroom,
-      hour: formattedTime, // Use formatted time with AM/PM
+      hour: formattedTime,
       mainProfessor: formData.mainProfessor,
       secondaryProfessor: formData.secondaryProfessor || undefined,
       faculty: formData.faculty,
@@ -104,6 +129,13 @@ const CreateExamForm = () => {
       console.error("Error creating exam:", error);
       alert("Eroare la crearea examenului.");
     }
+  };
+
+  // Custom function to add custom styles to the dates
+  const highlightBookedDates = (date) => {
+    return bookedDates.some((bookedDate) => new Date(bookedDate).toDateString() === date.toDateString())
+      ? { backgroundColor: "red", color: "white" }
+      : {};
   };
 
   return (
@@ -139,14 +171,38 @@ const CreateExamForm = () => {
           />
         </div>
 
-        {/* Data Examen */}
+        {/* Date Picker for Exam Date */}
         <div style={{ marginBottom: "15px" }}>
           <label htmlFor="examDate">Data Examenului:</label>
+          <DatePicker
+            selected={formData.examDate}
+            onChange={handleDateChange}
+            dateFormat="yyyy/MM/dd"
+            highlightDates={bookedDates.map(date => new Date(date))}
+            dayClassName={(date) => {
+              return bookedDates.some((bookedDate) => new Date(bookedDate).toDateString() === date.toDateString())
+                ? "booked-date"
+                : "";
+            }}
+            inline
+            required
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          />
+        </div>
+
+        {/* Exam Time Input */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="examTime">Oră Examen:</label>
           <input
-            type="datetime-local"
-            id="examDate"
-            name="examDate"
-            value={`${formData.examDate}T${formData.examTime}`}
+            type="time"
+            id="examTime"
+            name="examTime"
+            value={formData.examTime}
             onChange={handleChange}
             required
             style={{
@@ -197,7 +253,7 @@ const CreateExamForm = () => {
             <option value="" disabled>Selectați sala</option>
             {classrooms.map((classroom) => (
               <option key={classroom._id} value={classroom._id}>
-                {classroom.name}
+                {classroom.name} - {classroom.building}
               </option>
             ))}
           </select>
@@ -230,14 +286,12 @@ const CreateExamForm = () => {
 
         {/* Faculty */}
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="faculty">Facultate:</label>
-          <input
-            type="text"
+          <label htmlFor="faculty">Facultatea:</label>
+          <select
             id="faculty"
             name="faculty"
             value={formData.faculty}
             onChange={handleChange}
-            placeholder="Introduceți facultatea"
             required
             style={{
               width: "100%",
@@ -245,12 +299,17 @@ const CreateExamForm = () => {
               borderRadius: "4px",
               border: "1px solid #ccc",
             }}
-          />
+          >
+            <option value="" disabled>Selectați facultatea</option>
+            <option value="1">Calculatoare</option>
+            <option value="2">ESM</option>
+            <option value="3">Automatica</option>
+          </select>
         </div>
 
         {/* Group */}
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="group">Grupă:</label>
+          <label htmlFor="group">Grupa:</label>
           <select
             id="group"
             name="group"
@@ -273,21 +332,23 @@ const CreateExamForm = () => {
           </select>
         </div>
 
-        {/* Confirmare */}
         <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            background: "#007BFF",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Confirmare Adăugare
-        </button>
+  type="submit"
+  style={{
+    width: "100%",
+    padding: "10px",
+    borderRadius: "5px",
+    backgroundColor: isDateBooked ? "#ccc" : "#003366", // Change color if booked
+    color: isDateBooked ? "#666" : "#fff", // Change text color if booked
+    border: "none",
+    cursor: isDateBooked ? "not-allowed" : "pointer", // Disable cursor if booked
+    fontSize: "16px",
+    transition: "background-color 0.3s",
+  }}
+  disabled={isDateBooked} // Disable button if date is booked
+>
+  {isDateBooked ? "Data este deja rezervata" : "Trimiteți"}
+</button>
       </form>
     </div>
   );
