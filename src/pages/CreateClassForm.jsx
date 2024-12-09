@@ -5,8 +5,8 @@ const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const CreateClassForm = () => {
   const [formData, setFormData] = useState({
-    cladire: "",
-    numar_sala: "",
+    name: "", // maps to numar_sala
+    building: "", // maps to cladire
   });
 
   const handleChange = (e) => {
@@ -21,14 +21,15 @@ const CreateClassForm = () => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
     alert("Sala a fost creată cu succes!");
-    // Post the form data to the backend
-    axios.post(`${backendURL}/students`, formData)
+
+    // Post the form data to the backend at the correct endpoint
+    axios.post(`${backendURL}/classroom`, formData)
       .then(response => {
-        console.log('Student added successfully:', response.data);
+        console.log('Classroom added successfully:', response.data);
         // Optionally clear the form after submission
         setFormData({
-          cladire: '',
-          numar_sala: '',
+          name: '',
+          building: '',
         });
       })
       .catch(error => {
@@ -44,18 +45,18 @@ const CreateClassForm = () => {
 
         <input
           type="text"
-          name="cladire"
+          name="building"
           placeholder="Cladire"
-          value={formData.cladire}
+          value={formData.building}
           onChange={handleChange}
           style={inputStyle}
         />
 
         <input
           type="text"
-          name="numar_sala"
+          name="name"
           placeholder="Numar sala"
-          value={formData.numar_sala}
+          value={formData.name}
           onChange={handleChange}
           style={inputStyle}
         />
