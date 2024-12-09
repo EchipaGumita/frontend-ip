@@ -37,6 +37,10 @@ const CreateClassForm = () => {
       });
   };
 
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
   return (
     <div style={containerStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
@@ -61,7 +65,7 @@ const CreateClassForm = () => {
           style={inputStyle}
         />
 
-        <button type="submit" style={buttonStyle}>
+        <button type="submit" style={buttonStyle} onClick={() => handleItemClick('/dashboard')}>
           Confirmare Adaugare
         </button>
       </form>

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode"; // Corrected import for jwtDecode
@@ -122,6 +123,10 @@ const CreateExamForm = () => {
       alert("Eroare la crearea examenului.");
     }
   };
+
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
 
   return (
     <div
@@ -346,7 +351,7 @@ const CreateExamForm = () => {
             cursor: "pointer",
             fontSize: "16px",
           }}
-        >
+          onClick={() => handleItemClick('/dashboard')}>
           Creare Examen
         </button>
       </form>

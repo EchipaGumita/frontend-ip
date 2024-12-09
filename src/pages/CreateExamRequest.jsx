@@ -147,6 +147,10 @@ const CreateExamForm = () => {
       : {};
   };
 
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
   return (
     <div
       style={{
@@ -377,6 +381,7 @@ const CreateExamForm = () => {
             cursor: "pointer",
             fontSize: "16px",
           }}
+          onClick={() => handleItemClick('/requestlist')}
         >
           Trimiteți
         </button>

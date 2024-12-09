@@ -44,6 +44,10 @@ const AddStudentForm = () => {
       });
   };
 
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
   return (
     <div style={containerStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
@@ -93,7 +97,8 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
-          <option value="calculatoare">CALCULATOARE</option>
+
+          <option value="calculatoare">Calculatoare</option>
           <option value="esm">ESM</option>
           {/* Add more options as needed */}
         </select>
@@ -124,7 +129,7 @@ const AddStudentForm = () => {
           <option value="female">Feminin</option>
         </select>
 
-        <button type="submit" style={buttonStyle}>
+        <button type="submit" style={buttonStyle} onClick={() => handleItemClick('/studentlist')}>
           Confirmare Adaugare
         </button>
       </form>
