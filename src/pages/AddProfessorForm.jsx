@@ -41,6 +41,10 @@ const AddProfessorForm = () => {
       });
   };
 
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
   return (
     <div style={containerStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
@@ -103,7 +107,7 @@ const AddProfessorForm = () => {
           <option value="female">Feminin</option>
         </select>
 
-        <button type="submit" style={buttonStyle}>
+        <button type="submit" style={buttonStyle} onClick={() => handleItemClick('/professorlist')}>
           Confirmare Adaugare
         </button>
       </form>
