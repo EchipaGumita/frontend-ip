@@ -40,6 +40,10 @@ const RequestList = () => {
       console.error(`Error ${approve ? 'approving' : 'denying'} exam:`, error);
     }
   };
+  const handleItemClick = (path) => {
+    window.location.href = path;
+};
+
 
   return (
     <div className="dashboard-container">
@@ -47,7 +51,10 @@ const RequestList = () => {
       <main className="section exams">
         <div className="header-bar">
           <h3>Toate examenele</h3>
-          <button className="add-request-button" onClick={() => handleApproval('/createexamrequest')}>
+          <button className="add-request-button" onClick={() => {
+    handleApproval();
+    handleItemClick('/createexamrequest');
+  }}>
             <HiPlus size={24} />
           </button>
         </div>
