@@ -1,25 +1,63 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import {jwtDecode} from 'jwt-decode'; // Fixing import statement
+import '../ForgotPassword.css';
 
-const ResetPasswordPage = () => {
-  const [formData, setFormData] = useState({
-    password: '',
-    confirmPassword: '',
-  });
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+const ForgotPasswordPage = () => {
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [studentId, setStudentId] = useState(null);
+
+  useEffect(() => {
+    // Extract the studentId from the token stored in localStorage
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setStudentId(decodedToken.uniqueId); // Use the appropriate key if it's different
+      } catch (error) {
+        console.error('Error decoding the token:', error);
+        alert('Invalid token');
+      }
+    } else {
+      alert('You are not logged in');
+    }
+  }, []);
+
+  const handleChangeCurrentPassword = (e) => {
+    setCurrentPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleChangeNewPassword = (e) => {
+    setNewPassword(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+
+    if (!studentId) {
+      alert('Student ID could not be retrieved');
       return;
     }
-    console.log('Password reset:', formData.password);
-    // Add API logic here
+
+    try {
+      const response = await axios.put(`${backendURL}/students/${studentId}/password`, {
+        currentPassword,
+        newPassword,
+      });
+
+      console.log('Password change response:', response.data);
+      alert('Password changed successfully');
+    } catch (error) {
+      console.error('Error changing password:', error);
+      if (error.response && error.response.data) {
+        alert(error.response.data.message || 'Error changing password. Please try again.');
+      } else {
+        alert('Error changing password. Please try again.');
+      }
+    }
   };
 
   return (
@@ -33,27 +71,27 @@ const ResetPasswordPage = () => {
       </div>
 
       <div style={formContainerStyle}>
-        <h2 style={formTitleStyle}>Reset password</h2>
-        <p style={formSubtitleStyle}>Create a new password for your account.</p>
+        <h2 style={formTitleStyle}>Change Password</h2>
+        <p style={formSubtitleStyle}>Please enter your current and new password.</p>
         <form onSubmit={handleSubmit}>
           <input
             type="password"
-            name="password"
-            placeholder="New password"
-            value={formData.password}
-            onChange={handleChange}
+            placeholder="Current Password"
+            value={currentPassword}
+            onChange={handleChangeCurrentPassword}
             style={inputStyle}
+            required
           />
           <input
             type="password"
-            name="confirmPassword"
-            placeholder="Confirm new password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
+            placeholder="New Password"
+            value={newPassword}
+            onChange={handleChangeNewPassword}
             style={inputStyle}
+            required
           />
-          <button type="submit" style={buttonStyle}>
-            Confirm password
+          <button type="submit" className="button">
+            Change Password
           </button>
         </form>
       </div>
@@ -82,15 +120,9 @@ const logoStyle = {
   marginBottom: '10px',
 };
 
-const universityNameStyle = {
-  fontSize: '18px',
-  fontWeight: 'bold',
-  color: '#003366',
-};
-
 const formContainerStyle = {
   flex: 1,
-  backgroundColor: '#e7eff8',
+  backgroundColor: '#6699cc',
   padding: '30px',
   borderRadius: '8px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -101,13 +133,13 @@ const formTitleStyle = {
   marginBottom: '10px',
   fontSize: '22px',
   fontWeight: 'bold',
-  color: '#003366',
+  color: '#f2f2f2',
 };
 
 const formSubtitleStyle = {
   marginBottom: '20px',
   fontSize: '14px',
-  color: '#555',
+  color: '#f2f2f2',
 };
 
 const inputStyle = {
@@ -120,16 +152,4 @@ const inputStyle = {
   outline: 'none',
 };
 
-const buttonStyle = {
-  width: '100%',
-  padding: '10px',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  backgroundColor: '#003366',
-  color: '#fff',
-  borderRadius: '4px',
-  border: 'none',
-  cursor: 'pointer',
-};
-
-export default ResetPasswordPage;
+export default ForgotPasswordPage;

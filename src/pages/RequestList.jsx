@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import '../ExamsList.css';
 import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
@@ -10,14 +9,29 @@ const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const RequestList = () => {
   const [exams, setExams] = useState([]);
+  const [students, setStudents] = useState({}); // Store students' data by unique ID
 
   useEffect(() => {
     const fetchExams = async () => {
       try {
         const response = await axios.get(`${backendURL}/exam-request`);
-        setExams(response.data.requests);
+        const examData = response.data.requests;
+        setExams(examData);
+
+        // Fetch student data for each exam
+        const studentPromises = examData.map(exam =>
+          axios.get(`${backendURL}/students/${exam.studentUniqueId}`)
+        );
+
+        const studentResponses = await Promise.all(studentPromises);
+        const studentData = studentResponses.reduce((acc, curr) => {
+          acc[curr.data.uniqueId] = curr.data;
+          return acc;
+        }, {});
+
+        setStudents(studentData);
       } catch (error) {
-        console.error('Error fetching exams:', error);
+        console.error('Error fetching exams or students:', error);
       }
     };
 
@@ -29,7 +43,9 @@ const RequestList = () => {
       await axios.put(`${backendURL}/exam-request/${id}`, {
         approved: approve,
         reason: approve ? "Approved by admin" : "Denied by admin",
+        
       });
+      window.location.reload(); // Refresh the page after approval/denial
       // Update state locally after approval/denial
       setExams((prevExams) =>
         prevExams.map((exam) =>
@@ -40,10 +56,10 @@ const RequestList = () => {
       console.error(`Error ${approve ? 'approving' : 'denying'} exam:`, error);
     }
   };
+
   const handleItemClick = (path) => {
     window.location.href = path;
-};
-
+  };
 
   return (
     <div className="dashboard-container">
@@ -52,9 +68,9 @@ const RequestList = () => {
         <div className="header-bar">
           <h3>Toate examenele</h3>
           <button className="add-request-button" onClick={() => {
-    handleApproval();
-    handleItemClick('/createexamrequest');
-  }}>
+            handleApproval();
+            handleItemClick('/createexamrequest');
+          }}>
             <HiPlus size={24} />
           </button>
         </div>
@@ -71,6 +87,7 @@ const RequestList = () => {
           <span>Nume Examen</span>
           <span>Data</span>
           <span>Profesor</span>
+          <span>Student</span> {/* New column for student name */}
           <span>Actiune</span>
         </div>
 
@@ -82,6 +99,7 @@ const RequestList = () => {
                 <span>{exam.subject}</span> {/* Exam Name */}
                 <span>{new Date(exam.examDate).toLocaleDateString()}</span> {/* Exam Date */}
                 <span>{exam.mainProfessor.firstName} {exam.mainProfessor.lastName}</span> {/* Professor Name */}
+                <span>{students[exam.studentUniqueId] ? `${students[exam.studentUniqueId].firstName} ${students[exam.studentUniqueId].lastName}` : 'Loading...'}</span> {/* Student Name */}
                 <span className="action-buttons">
                   <button
                     className="approve-button"
