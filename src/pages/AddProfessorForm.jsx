@@ -1,14 +1,16 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
-
+import axios from 'axios'; // Import axios
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const AddProfessorForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
-    faculty: '',
-    subject: '',
-    position: '',
+    department: '',
+    gender: '',
+    isAdmin: false, //Default set to false
   });
 
   const handleChange = (e) => {
@@ -19,7 +21,24 @@ const AddProfessorForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Add your API call or data submission logic here
+    // Post the form data to the backend
+    axios.post(`${backendURL}/students`, formData)
+      .then(response => {
+        console.log('Student added successfully:', response.data);
+        // Optionally clear the form after submission
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          department: '',
+          gender: '',
+          isAdmin: false, //Default set to false});
+      });
+    })
+      .catch(error => {
+        console.error('There was an error adding the professor:', error);
+      });
   };
 
   return (
@@ -30,9 +49,18 @@ const AddProfessorForm = () => {
 
         <input
           type="text"
-          name="name"
-          placeholder="Nume"
+          name="firstName"
+          placeholder="Prenume"
           value={formData.name}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Nume"
+          value={formData.lastName}
           onChange={handleChange}
           style={inputStyle}
         />
@@ -55,52 +83,25 @@ const AddProfessorForm = () => {
           style={inputStyle}
         />
 
-        <select
-          name="faculty"
-          value={formData.faculty}
-          onChange={handleChange}
-          style={inputStyle}
-        >
-          <option value="">Facultate</option>
-          <option value="FIESC">FIESC</option>
-          <option value="FDSA">FDSA</option>
-          <option value="FEAA">FEAA</option>
-          <option value="FEFS">FEFS</option>
-          <option value="FIA">FIA</option>
-          <option value="FIMAR">FIMAR</option>
-          <option value="FIG">FIG</option>
-          <option value="FLSC">FLSC</option>
-          <option value="FMSB">FMSB</option>
-          <option value="FS">FS</option>
-          <option value="FSE">FSE</option>
-          {/* Add more options as needed */}
-        </select>
-
-        <select
-          name="subject"
-          value={formData.subject}
-          onChange={handleChange}
-          style={inputStyle}
-        >
-          <option value="">Materii</option>
-          <option value="Analiza Matematica">Analiza Matematica</option>
-          <option value="Fizica">Fizica</option>
-          <option value="Matematici Speciale">Matematici Speciale</option>
-          <option value="FElectrotehnica">Electrotehnica</option>
-          <option value="Algebra Liniara">Algebra Liniara</option>
-
-
-          {/* Add more options as needed */}
-        </select>
-
         <input
           type="text"
-          name="position"
-          placeholder="Functie"
-          value={formData.position}
+          name="department"
+          placeholder="Departament"
+          value={formData.department}
           onChange={handleChange}
           style={inputStyle}
         />
+        
+        <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          style={inputStyle}
+        >
+          <option value="">Gen</option>
+          <option value="male">Masculin</option>
+          <option value="female">Feminin</option>
+        </select>
 
         <button type="submit" style={buttonStyle}>
           Confirmare Adaugare
