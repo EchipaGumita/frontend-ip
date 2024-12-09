@@ -93,8 +93,17 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
-          <option value="calculatoare">CALCULATOARE</option>
-          <option value="esm">ESM</option>
+          <option value="FIESC">FIESC</option>
+          <option value="FDSA">FDSA</option>
+          <option value="FEAA">FEAA</option>
+          <option value="FEFS">FEFS</option>
+          <option value="FIA">FIA</option>
+          <option value="FIMAR">FIMAR</option>
+          <option value="FIG">FIG</option>
+          <option value="FLSC">FLSC</option>
+          <option value="FMSB">FMSB</option>
+          <option value="FS">FS</option>
+          <option value="FSE">FSE</option>
           {/* Add more options as needed */}
         </select>
 
@@ -104,9 +113,12 @@ const AddStudentForm = () => {
           onChange={handleChange}
           style={inputStyle}
         >
-          <option value="">Profil</option>
-          <option value="Informatica">Informatica</option>
-          <option value="Litere">Litere</option>
+          <option value="">Specializare</option>
+          <option value="Analiza Matematica">Analiza Matematica</option>
+          <option value="Fizica">Fizica</option>
+          <option value="Matematici Speciale">Matematici Speciale</option>
+          <option value="FElectrotehnica">Electrotehnica</option>
+          <option value="Algebra Liniara">Algebra Liniara</option>
           {/* Add more options as needed */}
         </select>
 

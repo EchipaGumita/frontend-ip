@@ -1,13 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
-
+import axios from 'axios'; // Import axios
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const CreateExamForm = () => {
   const [formData, setFormData] = useState({
     subject: "",
     mainProfessor: "",
-    supervisingProfessors: "",
+    secondaryProfessor: "",
     faculty: "",
-    groups: "",
+    group: "",
+    date: "",
+    hour: "",
+    duration: "",
+    classroom: "",
   });
 
   const handleChange = (e) => {
@@ -22,151 +27,172 @@ const CreateExamForm = () => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
     alert("Examenul a fost creat cu succes!");
-    // merge adaugat un apel la API aici pentru a salva datele
+    // Post the form data to the backend
+    axios.post(`${backendURL}/students`, formData)
+      .then(response => {
+        console.log('Student added successfully:', response.data);
+        // Optionally clear the form after submission
+        setFormData({
+          subject: '',
+          mainProfessor: '',
+          secondaryProfessor: '',
+          faculty: '',
+          group: '',
+          date: '',
+          hour: '',
+          duration: '',
+          classroom: '',
+        });
+      })
+      .catch(error => {
+        console.error('There was an error adding the student:', error);
+      });
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "500px",
-        margin: "0 auto",
-        padding: "20px",
-        background: "#e8f4fc",
-        borderRadius: "8px",
-      }}
-    >
-      <h2 style={{ textAlign: "center", color: "#003366" }}>Creare Examen</h2>
-      <p style={{ textAlign: "center", color: "#666" }}>Creare examen nou.</p>
-      <form onSubmit={handleSubmit}>
-        {/* Materie */}
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="subject">Materie:</label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            placeholder="Introduceți materia"
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
+    <div style={containerStyle}>
+      <form style={formStyle} onSubmit={handleSubmit}>
+        <h2 style={titleStyle}>Adaugare examen</h2>
+        <p style={subtitleStyle}>Adaugare de un nou examen.</p>
 
-        {/* Profesor Principal */}
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="mainProfessor">Profesor Principal:</label>
-          <select
-            id="mainProfessor"
-            name="mainProfessor"
-            value={formData.mainProfessor}
-            onChange={handleChange}
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          >
-            <option value="" disabled>
-              Selectați profesorul
-            </option>
-            <option value="prof1">Prof. Ion Popescu</option>
-            <option value="prof2">Prof. Maria Ionescu</option>
-            <option value="prof3">Prof. Alexandru Vasile</option>
-          </select>
-        </div>
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject"
+          value={formData.subject}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-        {/* Profesori Supraveghetori */}
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="supervisingProfessors">Profesori Supraveghetori:</label>
-          <input
-            type="text"
-            id="supervisingProfessors"
-            name="supervisingProfessors"
-            value={formData.supervisingProfessors}
-            onChange={handleChange}
-            placeholder="Introduceți profesorii supraveghetori"
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
+        <input
+          type="text"
+          name="mainProfessor"
+          placeholder="Main Professor"
+          value={formData.mainProfessor}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-        {/* Facultate */}
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="faculty">Facultate:</label>
-          <select
-            id="faculty"
-            name="faculty"
-            value={formData.faculty}
-            onChange={handleChange}
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          >
-            <option value="" disabled>
-              Selectați facultatea
-            </option>
-            <option value="facultate1">Facultatea de Matematică</option>
-            <option value="facultate2">Facultatea de Informatică</option>
-            <option value="facultate3">Facultatea de Fizică</option>
-          </select>
-        </div>
+        <input
+          type="text"
+          name="secondaryProfessor"
+          placeholder="Secondary Professor"
+          value={formData.secondaryProfessor}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-        {/* Grupe */}
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="groups">Grupă/e:</label>
-          <input
-            type="text"
-            id="groups"
-            name="groups"
-            value={formData.groups}
-            onChange={handleChange}
-            placeholder="Introduceți grupa/le"
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
+        <input
+          type="text"
+          name="faculty"
+          placeholder="Faculty"
+          value={formData.faculty}
+          onChange={handleChange}
+          style={inputStyle}
+        />
 
-        {/* Confirmare */}
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            background: "#007BFF",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Confirmare Adăugare
+        <input
+          type="text"
+          name="group"
+          placeholder="Group"
+          value={formData.group}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <input
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <input
+          type="time"
+          name="hour"
+          value={formData.hour}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <input
+          type="text"
+          name="duration"
+          placeholder="Duration"
+          value={formData.duration}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <input
+          type="text"
+          name="classroom"          
+          placeholder="Classroom"
+          value={formData.classroom}          
+          onChange={handleChange}
+          style={inputStyle}
+        />
+
+        <button type="submit" style={buttonStyle}>
+          Confirmare Adaugare
         </button>
       </form>
     </div>
   );
 };
 
+// CSS-in-JS style objects
+const containerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+  backgroundColor: '#f2f2f2',
+};
+
+const formStyle = {
+  backgroundColor: '#4a90e2',
+  padding: '20px',
+  borderRadius: '8px',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  width: '400px',
+  color: '#fff',
+  display: 'flex',
+  flexDirection: 'column',
+};
+
+const titleStyle = {
+  marginBottom: '10px',
+  fontSize: '20px',
+  fontWeight: 'bold',
+};
+
+const subtitleStyle = {
+  marginBottom: '20px',
+  fontSize: '14px',
+};
+
+const inputStyle = {
+  marginBottom: '15px',
+  padding: '10px',
+  fontSize: '14px',
+  borderRadius: '4px',
+  border: '1px solid #ccc', 
+  outline: 'none',
+  backgroundColor: '#fff', // fundal alb
+  color: '#000', 
+};
+
+const buttonStyle = {
+  padding: '10px',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  backgroundColor: '#003366',
+  color: '#fff',
+  borderRadius: '4px',
+  border: 'none',
+  cursor: 'pointer',
+};
 
 export default CreateExamForm;
