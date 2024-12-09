@@ -22,7 +22,7 @@ const AddProfessorForm = () => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     // Post the form data to the backend
-    axios.post(`${backendURL}/students`, formData)
+    axios.post(`${backendURL}/professor`, formData)
       .then(response => {
         console.log('Student added successfully:', response.data);
         // Optionally clear the form after submission

@@ -12,7 +12,7 @@ const CreateExamForm = () => {
     subject: "",
     examDate: new Date(), // Using Date object for better handling
     examTime: "",
-    examDuration: "",
+    duration: "",
     classroom: "",
     hour: "",
     mainProfessor: "",
@@ -88,32 +88,38 @@ const CreateExamForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+    // Validate required fields
+    if (
+      !formData.subject ||
+      !formData.examDate ||
+      !formData.examTime ||
+      !formData.examDuration ||
+      !formData.classroom ||
+      !formData.mainProfessor ||
+      !formData.faculty ||
+      !formData.group
+    ) {
+      alert("Vă rugăm să completați toate câmpurile obligatorii.");
+      return; // Prevent form submission
+    }
+  
     // Check if the selected date is already booked
     if (isDateBooked) {
       alert("Data selectată este deja rezervată. Vă rugăm să selectați o altă dată.");
       return; // Prevent form submission
     }
   
+    // Format the date and time
+    const formattedDate = formData.examDate.toISOString().split('T')[0]; // yyyy-mm-dd
     const [hour, minute] = formData.examTime.split(':');
-    let hourInt = parseInt(hour, 10);
-    let amOrPm = 'AM';
-  
-    if (hourInt >= 12) {
-      amOrPm = 'PM';
-      if (hourInt > 12) {
-        hourInt -= 12;
-      }
-    } else if (hourInt === 0) {
-      hourInt = 12; // Midnight case
-    }
-  
-    const formattedTime = `${hourInt}:${minute} ${amOrPm}`;
+    const formattedTime = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}:00`; // HH:MM:00
+    const fullDateTime = `${formattedDate}T${formattedTime}Z`; // yyyy-mm-ddTHH:MM:00Z
   
     const requestData = {
       studentUniqueId: studentId,
       subject: formData.subject,
-      examDate: formData.examDate,
-      examDuration: parseInt(formData.examDuration, 10),
+      examDate: fullDateTime, // Send in the required ISO format
+      duration: parseInt(formData.examDuration, 10),
       classroom: formData.classroom,
       hour: formattedTime,
       mainProfessor: formData.mainProfessor,
@@ -122,8 +128,10 @@ const CreateExamForm = () => {
       group: formData.group,
     };
   
+    console.log("Form Data Being Sent:", requestData);
+  
     try {
-      const response = await axios.post(`${backendURL}/exam-request`, requestData);
+      const response = await axios.post(`${backendURL}/exam`, requestData);
       alert("Examenul a fost creat cu succes!");
       console.log("Response:", response.data);
     } catch (error) {
@@ -178,7 +186,7 @@ const CreateExamForm = () => {
           <DatePicker
             selected={formData.examDate}
             onChange={handleDateChange}
-            dateFormat="yyyy/MM/dd"
+            dateFormat="yyyy-MM-dd"
             highlightDates={bookedDates.map(date => new Date(date))}
             dayClassName={(date) => {
               return bookedDates.some((bookedDate) => new Date(bookedDate).toDateString() === date.toDateString())
@@ -276,10 +284,34 @@ const CreateExamForm = () => {
               border: "1px solid #ccc",
             }}
           >
-            <option value="" disabled>Selectați profesorul</option>
+            <option value="" disabled>Selectați profesorul principal</option>
             {professors.map((professor) => (
               <option key={professor._id} value={professor._id}>
-                {professor.firstName} {professor.lastName}
+                {professor.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Secondary Professor */}
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="secondaryProfessor">Profesor Secundar:</label>
+          <select
+            id="secondaryProfessor"
+            name="secondaryProfessor"
+            value={formData.secondaryProfessor}
+            onChange={handleChange}
+            style={{
+              width: "100%",
+              padding: "8px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+            }}
+          >
+            <option value="">N/A</option>
+            {professors.map((professor) => (
+              <option key={professor._id} value={professor._id}>
+                {professor.name}
               </option>
             ))}
           </select>
@@ -287,7 +319,7 @@ const CreateExamForm = () => {
 
         {/* Faculty */}
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="faculty">Facultatea:</label>
+          <label htmlFor="faculty">Facultate:</label>
           <select
             id="faculty"
             name="faculty"
@@ -304,13 +336,13 @@ const CreateExamForm = () => {
             <option value="" disabled>Selectați facultatea</option>
             <option value="1">Calculatoare</option>
             <option value="2">ESM</option>
-            <option value="3">Automatica</option>
+            <option value="3">Automatică</option>
           </select>
         </div>
 
         {/* Group */}
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="group">Grupa:</label>
+          <label htmlFor="group">Grup:</label>
           <select
             id="group"
             name="group"
@@ -334,22 +366,20 @@ const CreateExamForm = () => {
         </div>
 
         <button
-  type="submit"
-  style={{
-    width: "100%",
-    padding: "10px",
-    borderRadius: "5px",
-    backgroundColor: isDateBooked ? "#ccc" : "#003366", // Change color if booked
-    color: isDateBooked ? "#666" : "#fff", // Change text color if booked
-    border: "none",
-    cursor: isDateBooked ? "not-allowed" : "pointer", // Disable cursor if booked
-    fontSize: "16px",
-    transition: "background-color 0.3s",
-  }}
-  disabled={isDateBooked} // Disable button if date is booked
->
-  {isDateBooked ? "Data este deja rezervata" : "Trimiteți"}
-</button>
+          type="submit"
+          style={{
+            width: "100%",
+            padding: "10px",
+            backgroundColor: "#003366",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+          }}
+        >
+          Trimiteți
+        </button>
       </form>
     </div>
   );
