@@ -93,17 +93,8 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
-          <option value="FIESC">FIESC</option>
-          <option value="FDSA">FDSA</option>
-          <option value="FEAA">FEAA</option>
-          <option value="FEFS">FEFS</option>
-          <option value="FIA">FIA</option>
-          <option value="FIMAR">FIMAR</option>
-          <option value="FIG">FIG</option>
-          <option value="FLSC">FLSC</option>
-          <option value="FMSB">FMSB</option>
-          <option value="FS">FS</option>
-          <option value="FSE">FSE</option>
+          <option value="calculatoare">CALCULATOARE</option>
+          <option value="esm">ESM</option>
           {/* Add more options as needed */}
         </select>
 

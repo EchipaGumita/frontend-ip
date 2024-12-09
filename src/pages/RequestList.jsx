@@ -4,15 +4,41 @@ import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
 import { FaCheck, FaTimes } from "react-icons/fa"; // Import icons for approve/deny
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
+import {jwtDecode} from 'jwt-decode'; // Import jwt-decode to decode the token
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const RequestList = () => {
   const [exams, setExams] = useState([]);
   const [students, setStudents] = useState({}); // Store students' data by unique ID
+  const [userRole, setUserRole] = useState(null);
+  const getUserRole = () => {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
 
+    try {
+      const decodedToken = jwtDecode(token);
+      const { uniqueId } = decodedToken;
+      const parts = uniqueId.split('-');
+      if (parts.length !== 3) {
+        console.error('Invalid token format');
+        return null;
+      }
+      const [, middle] = parts;
+      if (middle.length === 1 && !isNaN(middle)) {
+        return 'student';
+      }
+      if (middle.length === 3 && isNaN(middle)) {
+        return 'professor';
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
+    return null;
+  };
   useEffect(() => {
     const fetchExams = async () => {
+      setUserRole(getUserRole());
       try {
         const response = await axios.get(`${backendURL}/exam-request`);
         const examData = response.data.requests;
@@ -88,7 +114,7 @@ const RequestList = () => {
           <span>Data</span>
           <span>Profesor</span>
           <span>Student</span> {/* New column for student name */}
-          <span>Actiune</span>
+          {userRole === 'professor' && ( <span>Actiune</span>)}
         </div>
 
         {/* Table Body (Rows) */}
@@ -100,6 +126,7 @@ const RequestList = () => {
                 <span>{new Date(exam.examDate).toLocaleDateString()}</span> {/* Exam Date */}
                 <span>{exam.mainProfessor.firstName} {exam.mainProfessor.lastName}</span> {/* Professor Name */}
                 <span>{students[exam.studentUniqueId] ? `${students[exam.studentUniqueId].firstName} ${students[exam.studentUniqueId].lastName}` : 'Loading...'}</span> {/* Student Name */}
+                {userRole === 'professor' && (
                 <span className="action-buttons">
                   <button
                     className="approve-button"
@@ -113,7 +140,7 @@ const RequestList = () => {
                   >
                     <FaTimes color="red" />
                   </button>
-                </span>
+                </span>)}
               </div>
             ))
           ) : (

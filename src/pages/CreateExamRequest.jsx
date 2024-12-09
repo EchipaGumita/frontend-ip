@@ -12,7 +12,7 @@ const CreateExamForm = () => {
     subject: "",
     examDate: new Date(), // Using Date object for better handling
     examTime: "",
-    duration: "",
+    examDuration: "",
     classroom: "",
     hour: "",
     mainProfessor: "",
@@ -119,7 +119,7 @@ const CreateExamForm = () => {
       studentUniqueId: studentId,
       subject: formData.subject,
       examDate: fullDateTime, // Send in the required ISO format
-      duration: parseInt(formData.examDuration, 10),
+      examDuration: parseInt(formData.examDuration, 10),
       classroom: formData.classroom,
       hour: formattedTime,
       mainProfessor: formData.mainProfessor,
@@ -131,7 +131,7 @@ const CreateExamForm = () => {
     console.log("Form Data Being Sent:", requestData);
   
     try {
-      const response = await axios.post(`${backendURL}/exam`, requestData);
+      const response = await axios.post(`${backendURL}/exam-request`, requestData);
       alert("Examenul a fost creat cu succes!");
       console.log("Response:", response.data);
     } catch (error) {
