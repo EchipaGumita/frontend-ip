@@ -185,3 +185,10 @@
 .dropdown-content button:hover {
   background-color: #f1f1f1;
 }
+
+.ProfileDropdownMenu{
+  button {
+    background-color: #466799 ;
+  }
+  
+}
