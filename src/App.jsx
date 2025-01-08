@@ -13,10 +13,10 @@ import AddProfessorForm from './pages/AddProfessorForm';
 import AddStudentForm from './pages/AddStudentForm';
 import EditProfessor from './pages/EditProfessor';
 import EditStudent from './pages/EditStudent';
-import ResetPasswordPage from './pages/ResetPasswordPage';
 import CreateClassForm from './pages/CreateClassForm';
 import CreateExamRequest from './pages/CreateExamRequest';
 import ViewExamStudent from './pages/viewExamStudent';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 const App = () => {
   return (
@@ -26,7 +26,8 @@ const App = () => {
         <Route path="/" element={<Login />} />
         {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/resetpassword" element={<ResetPasswordPage />} />
+        <Route path="/resetpassword" element={< ResetPasswordPage/>} />
+        <Route path="/resetpassword" element={< ResetPasswordPage/>} />
 
         {/* Protected Routes for Students */}
         <Route element={<ProtectedRoute allowedRoles={['student']} />}>

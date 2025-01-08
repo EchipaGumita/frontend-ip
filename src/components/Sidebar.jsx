@@ -77,12 +77,13 @@ const Sidebar = () => {
                     >
                         <Folder /> Orar Examene
                     </li>
+                    {userRole === 'Student' && (
                     <li 
                         className={activeItem === 'Vizualizare examene' ? 'active' : ''} 
                         onClick={() => handleItemClick('Vizualizare examene', '/viewexamstudent')}
                     >
                         <Folder /> Vizualizare examene
-                    </li>
+                    </li>)}
                     <li 
                         className={activeItem === 'Requests' ? 'active' : ''} 
                         onClick={() => handleItemClick('Requests', '/requestlist')}
