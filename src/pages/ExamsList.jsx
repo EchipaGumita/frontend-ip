@@ -109,6 +109,10 @@ const Dashboard = () => {
                   <HiPlus size={24} />
                   AE
                 </button>
+                <button className="add-request-button" onClick={() => handleItemClick('/creategroup-subgroup')}>
+                  <HiPlus size={24} />
+                  AG
+                </button>
                 <button className="add-request-button" onClick={() => handleItemClick('/createclass')}>
                   <HiPlus size={24} />
                   AS
