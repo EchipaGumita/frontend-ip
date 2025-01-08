@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import axios from 'axios'; // Import axios
 const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -6,7 +5,7 @@ const backendURL = import.meta.env.VITE_BACKEND_URL;
 const CreateGroup_SubgroupForm = () => {
   const [formData, setFormData] = useState({
     group: "", // maps to grupa
-    subgroup: "", // maps to semigrupa
+    subgroups: "", // maps to comma-separated semigrupa names
   });
 
   const handleChange = (e) => {
@@ -17,29 +16,59 @@ const CreateGroup_SubgroupForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
     alert("Grupa/semigrupa a fost creată cu succes!");
 
-    // Post the form data to the backend at the correct endpoint
-    axios.post(`${backendURL}/classroom`, formData)
-      .then(response => {
-        console.log('Gr/subgr added successfully:', response.data);
-        // Optionally clear the form after submission
-        setFormData({
-          group: '',
-          subgroup: '',
-        });
-      })
-      .catch(error => {
-        console.error('There was an error adding the gr/subgr:', error);
+    try {
+      // Create Group
+      const groupResponse = await axios.post(`${backendURL}/groups`, { name: formData.group });
+      console.log('Group created successfully:', groupResponse.data);
+
+      // Extract group ID from the response
+      const groupId = groupResponse.data.group._id;
+      if (!groupId) {
+        throw new Error("Group creation failed, no group ID returned.");
+      }
+
+      // Split the subgroups input into an array
+      const subgroupNames = formData.subgroups.split(',').map(subgroup => subgroup.trim());
+
+      const createdSubgroups = [];
+
+      // Create Subgroups
+      for (let name of subgroupNames) {
+        const subgroupResponse = await axios.post(`${backendURL}/subgroup`, { name });
+        console.log('Subgroup created successfully:', subgroupResponse.data);
+        createdSubgroups.push(subgroupResponse.data.subGroup._id);
+      }
+
+      if (createdSubgroups.length === 0) {
+        throw new Error("No subgroups created.");
+      }
+
+      // Now associate the subgroups with the group
+      const addSubgroupResponse = await axios.post(`${backendURL}/groups/add-subgroups`, {
+        groupId: groupId,  // Group ID from the group creation response
+        subGroupIds: createdSubgroups, // Array of subgroup IDs from the subgroup creation responses
       });
+
+      console.log('Subgroups added to group:', addSubgroupResponse.data);
+
+      // Optionally clear the form after submission
+      setFormData({
+        group: '',
+        subgroups: '',
+      });
+    } catch (error) {
+      console.error('Error creating group or subgroups:', error);
+    }
   };
 
   const handleItemClick = (path) => {
     window.location.href = path;
-};
+  };
 
   return (
     <div style={containerStyle}>
@@ -59,13 +88,13 @@ const CreateGroup_SubgroupForm = () => {
         <input
           type="text"
           name="subgroups"
-          placeholder="Semigrupele aferente"
-          value={formData.subgroup}
+          placeholder="Semigrupa (separate cu virgula)"
+          value={formData.subgroups}
           onChange={handleChange}
           style={inputStyle}
         />
 
-        <button type="submit" style={buttonStyle} onClick={() => handleItemClick('/dashboard')}>
+        <button type="submit" style={buttonStyle}>
           Confirmare Adaugare
         </button>
       </form>

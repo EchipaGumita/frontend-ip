@@ -170,8 +170,7 @@ const StudentList = () => {
                     <Dropdown.Menu>
                       <Dropdown.Item onClick={() => handleDropdownOption('Edit', student)}>Edit</Dropdown.Item>
                       <Dropdown.Item onClick={() => handleDropdownOption('Remove', student)}>Remove</Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleDropdownOption('Assign Group', student)}>Assign Group</Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleDropdownOption('Assign Subgroup', student)}>Assign Subgroup</Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleDropdownOption('Assign Group', student)}>Assign Subgroup</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </span>
@@ -194,22 +193,6 @@ const StudentList = () => {
             <div className="modal-body">
               <p>Student: {selectedStudent ? `${selectedStudent.firstName} ${selectedStudent.lastName}` : ''}</p>
               <div className="mb-3">
-                <label htmlFor="groupId" className="form-label">Select Group</label>
-                <select
-                  className="form-control"
-                  id="groupId"
-                  value={groupId}
-                  onChange={(e) => setGroupId(e.target.value)}
-                >
-                  <option value="">--Select Group--</option>
-                  {groups.map((group) => (
-                    <option key={group._id} value={group._id}>
-                      {group.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-3">
                 <label htmlFor="subgroupId" className="form-label">Select Subgroup</label>
                 <select
                   className="form-control"
@@ -228,7 +211,6 @@ const StudentList = () => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Close</button>
-              <button type="button" className="btn btn-primary" onClick={handleAssignGroup}>Assign Group</button>
               <button type="button" className="btn btn-primary" onClick={handleAssignSubgroup}>Assign Subgroup</button>
             </div>
           </div>
