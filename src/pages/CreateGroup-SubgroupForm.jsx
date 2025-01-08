@@ -73,8 +73,8 @@ const CreateGroup_SubgroupForm = () => {
   return (
     <div style={containerStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
-        <h2 style={titleStyle}>Adaugare Grupa/Semigrupa</h2>
-        <p style={subtitleStyle}>Adaugare de o noua grupa/semigrupa.</p>
+        <h2 style={titleStyle}>Adaugare Grupa+Semigrupe</h2>
+        <p style={subtitleStyle}>Adaugare de o noua grupa+semigrupe.</p>
 
         <input
           type="text"
