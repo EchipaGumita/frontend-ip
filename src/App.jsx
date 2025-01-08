@@ -28,10 +28,11 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/resetpassword" element={< ResetPasswordPage/>} />
         <Route path="/resetpassword" element={< ResetPasswordPage/>} />
+        
 
         {/* Protected Routes for Students */}
         <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-          <Route path="/viewexamstudent" element={<ViewExamStudent />} />
+        <Route path="/viewexamstudent" element={<ViewExamStudent />} />
         </Route>
 
         {/* Protected Routes for Professors */}

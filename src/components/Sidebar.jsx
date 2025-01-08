@@ -77,7 +77,7 @@ const Sidebar = () => {
                     >
                         <Folder /> Orar Examene
                     </li>
-                    {userRole === 'Student' && (
+                    {userRole === 'student' && (
                     <li 
                         className={activeItem === 'Vizualizare examene' ? 'active' : ''} 
                         onClick={() => handleItemClick('Vizualizare examene', '/viewexamstudent')}
