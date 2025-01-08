@@ -20,7 +20,7 @@ const CreateGroup_SubgroupForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
-    alert("Grupa/semugrupa a fost creată cu succes!");
+    alert("Grupa/semigrupa a fost creată cu succes!");
 
     // Post the form data to the backend at the correct endpoint
     axios.post(`${backendURL}/classroom`, formData)
