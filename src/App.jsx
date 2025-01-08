@@ -17,6 +17,7 @@ import CreateClassForm from './pages/CreateClassForm';
 import CreateExamRequest from './pages/CreateExamRequest';
 import ViewExamStudent from './pages/viewExamStudent';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import CreateGroup_SubgroupForm from './pages/CreateGroup-SubgroupForm';
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
 
           
           <Route path="/createexam" element={<CreateExamForm />} />
+          <Route path="/creategroup-subgroup" element={<CreateGroup_SubgroupForm />} />
           <Route path="/addprofessor" element={<AddProfessorForm />} />
           <Route path="/edit-professor/:id" element={<EditProfessor />} />
           <Route path="/studentlist" element={<StudentsList />} />
