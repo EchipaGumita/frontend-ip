@@ -20,7 +20,8 @@ export function DropdownMenu() {
   };
 
   return (
-    <Dropdown label="Profil" dismissOnClick={true}>
+    <div className="ProfileDropdownMenu">
+    <Dropdown label="Profil"  dismissOnClick={true}>
       <Dropdown.Item onClick={() => handleItemClick('/resetpassword')}>
         Change Password
       </Dropdown.Item>
@@ -28,5 +29,6 @@ export function DropdownMenu() {
         Sign out
       </Dropdown.Item>
     </Dropdown>
+    </div>
   );
 }
