@@ -125,7 +125,7 @@ const containerStyle = {
 };
 
 const formStyle = {
-  backgroundColor: '#272f54',
+  backgroundColor: '#6699cc',
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -161,8 +161,8 @@ const buttonStyle = {
   padding: '10px',
   fontSize: '16px',
   fontWeight: 'bold',
-  backgroundColor: '#81AFE2',
-  color: '#272f54',
+  backgroundColor: '#003366',
+  color: '#fff',
   borderRadius: '4px',
   border: 'none',
   cursor: 'pointer',

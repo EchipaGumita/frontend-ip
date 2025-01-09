@@ -98,8 +98,7 @@ const AddStudentForm = () => {
         >
           <option value="">Facultate</option>
 
-          <option value="calculatoare">Calculatoare</option>
-          <option value="esm">ESM</option>
+          <option value="FIESC">FIESC</option>
           {/* Add more options as needed */}
         </select>
 
@@ -110,11 +109,16 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Specializare</option>
-          <option value="Analiza Matematica">Analiza Matematica</option>
-          <option value="Fizica">Fizica</option>
-          <option value="Matematici Speciale">Matematici Speciale</option>
-          <option value="FElectrotehnica">Electrotehnica</option>
-          <option value="Algebra Liniara">Algebra Liniara</option>
+          <option value="Automatica si Informatica Aplicata">Automatica si Informatica Aplicata</option>
+          <option value="Calculatoare">Calculatoare</option>
+          <option value="Echipamente si Sisteme de Comnada si Control pentru Autovehicule">Echipamente si Sisteme de Comnada si Control pentru Autovehicule</option>
+          <option value="Echipamente si Sisteme Medicale">Echipamente si Sisteme Medicale</option>
+          <option value="Electronica Aplicata">Electronica Aplicata</option>
+          <option value="Energetica si Tehnologii Informate">Energetica si Tehnologii Informate</option>
+          <option value="Managementul Energiei">Managementul Energiei</option>
+          <option value="Retele si Software de telecomunicatii">Retele si Software de telecomunicatii</option>
+          <option value="Sisteme Electrice">Sisteme Electrice</option>
+
           {/* Add more options as needed */}
         </select>
 
@@ -147,7 +151,7 @@ const containerStyle = {
 };
 
 const formStyle = {
-  backgroundColor: '#4a90e2',
+  backgroundColor: '#6699cc',
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',

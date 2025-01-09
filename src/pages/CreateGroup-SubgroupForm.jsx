@@ -112,7 +112,7 @@ const containerStyle = {
 };
 
 const formStyle = {
-  backgroundColor: '#4a90e2',
+  backgroundColor: '#6699cc',
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
