@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode'; // Fixing import statement
+import {jwtDecode} from 'jwt-decode'; // Fixed import statement
+import { useLocation } from 'react-router-dom'; // Import useLocation to access the query string
 import '../ForgotPassword.css';
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-const ForgotPasswordPage = () => {
+const ResetPasswordPage = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [studentId, setStudentId] = useState(null);
+  const [email, setEmail] = useState(null);
+
+  // Access the current URL and extract the query string using useLocation
+  const location = useLocation();
 
   useEffect(() => {
-    // Extract the studentId from the token stored in localStorage
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        setStudentId(decodedToken.uniqueId); // Use the appropriate key if it's different
-      } catch (error) {
-        console.error('Error decoding the token:', error);
-        alert('Invalid token');
-      }
+    // Extract the email from the query string (if available)
+    const params = new URLSearchParams(location.search);
+    const urlEmail = params.get('email');
+    const encodedEmail = encodeURIComponent(urlEmail);
+
+    if (encodedEmail) {
+      setEmail(encodedEmail); // Set the email from the query string
     } else {
-      alert('You are not logged in');
+      // Extract the studentId from the token stored in localStorage if no email
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token);
+          setStudentId(decodedToken.uniqueId); // Ensure the key matches your token payload
+        } catch (error) {
+          console.error('Error decoding the token:', error);
+          alert('Invalid token');
+        }
+      } else {
+        alert('You are not logged in');
+      }
     }
-  }, []);
+  }, [location.search]);
 
   const handleChangeCurrentPassword = (e) => {
     setCurrentPassword(e.target.value);
@@ -37,19 +51,22 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!studentId) {
-      alert('Student ID could not be retrieved');
+    // Determine the identifier to use (email or studentId)
+    const identifier = email || studentId;
+    if (!identifier) {
+      alert('Could not retrieve email or student ID');
       return;
     }
 
     try {
-      const response = await axios.put(`${backendURL}/students/${studentId}/password`, {
-        currentPassword,
-        newPassword,
-      });
+      const response = await axios.put(
+        `${backendURL}/students/${identifier}/password`,
+        { currentPassword, newPassword }
+      );
 
       console.log('Password change response:', response.data);
       alert('Password changed successfully');
+      window.location.href = '/'; // Redirect to home page after success
     } catch (error) {
       console.error('Error changing password:', error);
       if (error.response && error.response.data) {
@@ -152,4 +169,4 @@ const inputStyle = {
   outline: 'none',
 };
 
-export default ForgotPasswordPage;
+export default ResetPasswordPage;
