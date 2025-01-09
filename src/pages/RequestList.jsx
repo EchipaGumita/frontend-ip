@@ -92,7 +92,7 @@ const RequestList = () => {
       <Sidebar />
       <main className="section exams">
         <div className="header-bar">
-          <h3>Toate examenele</h3>
+          <h3>Toate request-urile de examene</h3>
           <button className="add-request-button" onClick={() => {
             handleApproval();
             handleItemClick('/createexamrequest');
