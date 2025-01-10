@@ -93,7 +93,7 @@ const RequestList = () => {
       <main className="section exams">
         <div className="header-bar">
           <h3>Toate request-urile de examene</h3>
-          {userRole === 'professor' && (
+          {userRole === 'student' && (
           <button className="add-request-button" onClick={() => {
             handleApproval();
             handleItemClick('/createexamrequest');
