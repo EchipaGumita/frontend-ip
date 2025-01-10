@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 const AddStudentForm = () => {
-  // Initial state matching the required post structure
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,11 +23,9 @@ const AddStudentForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Post the form data to the backend
     axios.post(`${backendURL}/students`, formData)
       .then(response => {
         console.log('Student added successfully:', response.data);
-        // Optionally clear the form after submission
         setFormData({
           firstName: '',
           lastName: '',
@@ -43,10 +41,6 @@ const AddStudentForm = () => {
         console.error('There was an error adding the student:', error);
       });
   };
-
-  const handleItemClick = (path) => {
-   // window.location.href = path;
-};
 
   return (
     <div style={containerStyle}>
@@ -97,11 +91,15 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Facultate</option>
-
-          <option value="calculatoare">FIESC</option>
-          <option value="esm">ESM</option>
-          <option value="automatica">AUTOMATICA</option>
-          {/* Add more options as needed */}
+          <option value="c">Calculatoare</option>
+          <option value="esm">Echipamente si Sisteme Medicale</option>
+          <option value="aia">Automatica si Informatica Aplicata</option>
+          <option value="escca">Echipamente si Sisteme de Comanda si Control pentru Autovehicule</option>
+          <option value="ea">Electronica Aplicata</option>
+          <option value="etti">Energetica si Tehnologii Informatice</option>
+          <option value="me">Managementul Energiei</option>
+          <option value="rst">Retele si Software de Telecomunicatii</option>
+          <option value="se">Sisteme Electrice</option>
         </select>
 
         <select
@@ -111,17 +109,7 @@ const AddStudentForm = () => {
           style={inputStyle}
         >
           <option value="">Specializare</option>
-          <option value="Automatica si Informatica Aplicata">Automatica si Informatica Aplicata</option>
-          <option value="Calculatoare">Calculatoare</option>
-          <option value="Echipamente si Sisteme de Comnada si Control pentru Autovehicule">Echipamente si Sisteme de Comnada si Control pentru Autovehicule</option>
-          <option value="Echipamente si Sisteme Medicale">Echipamente si Sisteme Medicale</option>
-          <option value="Electronica Aplicata">Electronica Aplicata</option>
-          <option value="Energetica si Tehnologii Informate">Energetica si Tehnologii Informate</option>
-          <option value="Managementul Energiei">Managementul Energiei</option>
-          <option value="Retele si Software de telecomunicatii">Retele si Software de telecomunicatii</option>
-          <option value="Sisteme Electrice">Sisteme Electrice</option>
-
-          {/* Add more options as needed */}
+          <option value="fiesc">FIESC</option>
         </select>
 
         <select
@@ -135,7 +123,7 @@ const AddStudentForm = () => {
           <option value="female">Feminin</option>
         </select>
 
-        <button type="submit" style={buttonStyle} onClick={() => handleItemClick('/studentlist')}>
+        <button type="submit" style={buttonStyle}>
           Confirmare Adaugare
         </button>
       </form>
@@ -181,7 +169,7 @@ const inputStyle = {
   borderRadius: '4px',
   border: '1px solid #ccc', 
   outline: 'none',
-  backgroundColor: '#fff', // fundal alb
+  backgroundColor: '#fff',
   color: '#000', 
 };
 
