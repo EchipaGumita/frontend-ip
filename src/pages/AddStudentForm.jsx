@@ -45,7 +45,7 @@ const AddStudentForm = () => {
   };
 
   const handleItemClick = (path) => {
-    window.location.href = path;
+   // window.location.href = path;
 };
 
   return (
@@ -98,7 +98,7 @@ const AddStudentForm = () => {
         >
           <option value="">Facultate</option>
 
-          <option value="FIESC">FIESC</option>
+          <option value="calculatoare">FIESC</option>
           {/* Add more options as needed */}
         </select>
 
