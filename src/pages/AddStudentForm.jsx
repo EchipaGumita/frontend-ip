@@ -99,6 +99,8 @@ const AddStudentForm = () => {
           <option value="">Facultate</option>
 
           <option value="calculatoare">FIESC</option>
+          <option value="esm">ESM</option>
+          <option value="automatica">AUTOMATICA</option>
           {/* Add more options as needed */}
         </select>
 
