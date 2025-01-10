@@ -291,7 +291,7 @@ const CreateExamForm = () => {
             <option value="" disabled>Selectați profesorul principal</option>
             {professors.map((professor) => (
               <option key={professor._id} value={professor._id}>
-                {professor.name}
+                {professor.firstName} {professor.lastName}
               </option>
             ))}
           </select>
@@ -315,7 +315,7 @@ const CreateExamForm = () => {
             <option value="">N/A</option>
             {professors.map((professor) => (
               <option key={professor._id} value={professor._id}>
-                {professor.name}
+                {professor.firstName} {professor.lastName}
               </option>
             ))}
           </select>
