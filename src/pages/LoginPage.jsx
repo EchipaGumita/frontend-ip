@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import { GoogleLogin } from '@react-oauth/google'; // Import Google Login
 import '../LoginPage.css';
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -40,6 +41,27 @@ const LoginPage = () => {
         }
     };
 
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            // Send Google token to the backend
+            const response = await axios.post(`${backendURL}/auth/google-login`, {
+                googleToken: credentialResponse.credential,
+            });
+
+            // Save the JWT token
+            localStorage.setItem('token', response.data.token);
+
+            // Redirect to dashboard
+            navigate('/dashboard');
+        } catch (error) {
+            setError('The email you entered doesnt exist in our database.');
+        }
+    };
+
+    const handleGoogleError = () => {
+        setError('Google login was unsuccessful. Please try again.');
+    };
+
     return (
         <div className="login-container">
             <div className="login-logo">
@@ -77,6 +99,14 @@ const LoginPage = () => {
 
                     <button type="submit" className="login-button">Login</button>
                 </form>
+
+                <div className="google-login-container">
+                    <p>Or login with:</p>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                    />
+                </div>
             </div>
         </div>
     );
