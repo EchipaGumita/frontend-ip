@@ -90,7 +90,7 @@ const AddStudentForm = () => {
           onChange={handleChange}
           style={inputStyle}
         >
-          <option value="">Facultate</option>
+          <option value="">Specializare</option>
           <option value="c">Calculatoare</option>
           <option value="esm">Echipamente si Sisteme Medicale</option>
           <option value="aia">Automatica si Informatica Aplicata</option>
@@ -108,7 +108,7 @@ const AddStudentForm = () => {
           onChange={handleChange}
           style={inputStyle}
         >
-          <option value="">Specializare</option>
+          <option value="">Facultate</option>
           <option value="fiesc">FIESC</option>
         </select>
 

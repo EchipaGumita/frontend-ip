@@ -158,8 +158,8 @@ const StudentList = () => {
         <div className="table-header">
           <span>Nume</span>
           <span>Email</span>
-          <span>Specializare</span>
           <span>Facultate</span>
+          <span>Specializare</span>
           <span>Gen</span>
           <span>An</span>
           <span>ID Unic</span>
