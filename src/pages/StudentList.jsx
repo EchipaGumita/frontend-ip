@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is import
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { HiPlus } from 'react-icons/hi';
 import { Dropdown } from 'react-bootstrap';
+import { isAdmin } from '../utils/authUtils';
 import Sidebar from '../components/Sidebar';
 import ReactPaginate from 'react-paginate'; // Import ReactPaginate
 
@@ -15,6 +16,7 @@ const StudentList = () => {
   const [subgroups, setSubgroups] = useState([]); // State for subgroups
   const [showModal, setShowModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+   const [isUserAdmin, setIsUserAdmin] = useState(false); 
   const [groupId, setGroupId] = useState('');
   const [subgroupId, setSubgroupId] = useState('');
 
@@ -22,7 +24,43 @@ const StudentList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [studentsPerPage] = useState(5); // Set the number of students per page
   const [totalPages, setTotalPages] = useState(1);
+   const getUserRole = () => {
+      const token = localStorage.getItem('token');
+      if (!token) return null;
+  
+      try {
+        const decodedToken = jwtDecode(token);
+        const { uniqueId } = decodedToken;
+        const parts = uniqueId.split('-');
+        if (parts.length !== 3) {
+          console.error('Invalid token format');
+          return null;
+        }
+        const [, middle] = parts;
+        if (middle.length === 1 && !isNaN(middle)) {
+          return 'student';
+        }
+        if (middle.length === 3 && isNaN(middle)) {
+          return 'professor';
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+      return null;
+    };
+useEffect(() => {
+    const initialize = async () => {
+      const role = getUserRole();
+      setUserRole(role);
 
+      if (role === 'professor') {
+        const adminStatus = await isAdmin(); // Check admin status
+        setIsUserAdmin(adminStatus);
+      }
+    };
+
+    initialize();
+  }, []);
   // Fetch students
   useEffect(() => {
     const fetchStudents = async () => {
@@ -143,9 +181,10 @@ const StudentList = () => {
       <main className="section students">
         <div className="header-bar">
           <h3>Studenți</h3>
+          {isUserAdmin && (
           <button className="add-request-button" onClick={() => handleItemClick('/addstudent')}>
             <HiPlus size={24} />
-          </button>
+            </button>)}
         </div>
 
         <div className="search-bar">
@@ -163,7 +202,7 @@ const StudentList = () => {
           <span>Gen</span>
           <span>An</span>
           <span>ID Unic</span>
-          <span>Actiuni</span>
+          {isUserAdmin && ( <span>Actiuni</span> )}
         </div>
 
         <div className="table-body">
@@ -177,7 +216,7 @@ const StudentList = () => {
                 <span>{student.gender}</span>
                 <span>{student.year}</span>
                 <span>{student.uniqueId}</span>
-                <span>
+                {isUserAdmin && (<span>
                   <Dropdown>
                     <Dropdown.Toggle variant="info" id={`dropdown-${student.uniqueId}`}>
                       Actions
@@ -189,7 +228,7 @@ const StudentList = () => {
                       <Dropdown.Item onClick={() => handleDropdownOption('Assign Group', student)}>Assign Subgroup</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
-                </span>
+                </span> )}
               </div>
             ))
           ) : (

@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar';
 import ExamDropdown from '../components/ExamDropDown';
 import ReactPaginate from 'react-paginate';
 import { jwtDecode } from 'jwt-decode';
+import { isAdmin } from '../utils/authUtils';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -17,6 +18,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isUserAdmin, setIsUserAdmin] = useState(false); 
   const examsPerPage = 5;
   const navigate = useNavigate();
 
@@ -44,24 +46,50 @@ const Dashboard = () => {
     }
     return null;
   };
+  useEffect(() => {
+    const initialize = async () => {
+      const role = getUserRole();
+      setUserRole(role);
 
+      if (role === 'professor') {
+        const adminStatus = await isAdmin(); // Check admin status
+        setIsUserAdmin(adminStatus);
+      }
+    };
+
+    initialize();
+  }, []);
   useEffect(() => {
     setUserRole(getUserRole());
+    
     const fetchExams = async () => {
       try {
+        const token = localStorage.getItem('token');
+        const decodedToken = jwtDecode(token);
+        const professorUniqueId = decodedToken.uniqueId;
+  
         const response = await axios.get(`${backendURL}/exam`);
         const allExams = response.data.exams;
   
-        // Filter exams based on the search term for subject, group, classroom, examiner, and hour
-        const filteredExams = allExams.filter(exam => 
+        // Filter exams based on the search term
+        let filteredExams = allExams.filter((exam) =>
           exam.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (exam.group && exam.group.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
           (exam.mainProfessor && `${exam.mainProfessor.firstName} ${exam.mainProfessor.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())) ||
           (exam.secondaryProfessor && `${exam.secondaryProfessor.firstName} ${exam.secondaryProfessor.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())) ||
           (exam.classroom && exam.classroom.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-          (exam.hour.toLowerCase().includes(searchTerm.toLowerCase()))||
-          (new Date(exam.date).toLocaleDateString().toLowerCase().includes(searchTerm.toLowerCase()))
+          exam.hour.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          new Date(exam.date).toLocaleDateString().toLowerCase().includes(searchTerm.toLowerCase())
         );
+  
+        // Additional filtering for professors
+        if (userRole === 'professor'&& !isUserAdmin) {
+          filteredExams = filteredExams.filter(
+            (exam) =>
+              (exam.mainProfessor && exam.mainProfessor.uniqueId === professorUniqueId) ||
+              (exam.secondaryProfessor && exam.secondaryProfessor.uniqueId === professorUniqueId)
+          );
+        }
   
         // Calculate total pages
         setTotalPages(Math.ceil(filteredExams.length / examsPerPage));
@@ -70,14 +98,14 @@ const Dashboard = () => {
         const startIndex = currentPage * examsPerPage;
         const currentPageExams = filteredExams.slice(startIndex, startIndex + examsPerPage);
         setExams(currentPageExams);
-  
       } catch (error) {
         console.error('Error fetching exams:', error);
       }
     };
   
     fetchExams();
-  }, [currentPage, searchTerm]);
+  }, [currentPage, searchTerm, userRole]);
+  
 
   const removeExamFromState = (examId) => {
     setExams(exams.filter(exam => exam._id !== examId));
@@ -109,14 +137,18 @@ const Dashboard = () => {
                   <HiPlus size={24} />
                   AE
                 </button>
+                {isUserAdmin && (
                 <button className="add-request-button" onClick={() => handleItemClick('/creategroup-subgroup')}>
                   <HiPlus size={24} />
                   AG
                 </button>
+                )}
+                 {isUserAdmin && (
                 <button className="add-request-button" onClick={() => handleItemClick('/createclass')}>
                   <HiPlus size={24} />
                   AS
                 </button>
+                 )}
               </>
             )}
           </div>
@@ -142,7 +174,7 @@ const Dashboard = () => {
             <span>Data</span>
             <span>Ora</span>
             <span>Sala</span>
-            {userRole === 'professor' && <span>Actiuni</span>}
+            {userRole === 'professor'&& isUserAdmin &&( <span>Actiuni</span>)  }
           </div>
 
           <div className="table-body">
@@ -160,7 +192,7 @@ const Dashboard = () => {
                   <span>{new Date(exam.date).toLocaleDateString()}</span>
                   <span>{exam.hour}</span>
                   <span>{exam.classroom?.name || 'No classroom assigned'}</span>
-                  {userRole === 'professor' && (
+                  {userRole === 'professor' && isUserAdmin && (
                     <span>
                       <ExamDropdown examId={exam._id} onDelete={removeExamFromState} />
                     </span>
