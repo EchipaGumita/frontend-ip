@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import '../ExamsList.css';
 import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
-import { FaCheck, FaTimes } from "react-icons/fa"; // Import icons for approve/deny
+import { FaCheck, FaTimes } from "react-icons/fa";
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
-import {jwtDecode} from 'jwt-decode'; // Import jwt-decode to decode the token
+import { jwtDecode } from 'jwt-decode'; // Import jwt-decode to decode the token
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -12,6 +12,8 @@ const RequestList = () => {
   const [exams, setExams] = useState([]);
   const [students, setStudents] = useState({}); // Store students' data by unique ID
   const [userRole, setUserRole] = useState(null);
+  const [uniqueId, setUniqueId] = useState(null);
+
   const getUserRole = () => {
     const token = localStorage.getItem('token');
     if (!token) return null;
@@ -19,6 +21,7 @@ const RequestList = () => {
     try {
       const decodedToken = jwtDecode(token);
       const { uniqueId } = decodedToken;
+      setUniqueId(uniqueId);
       const parts = uniqueId.split('-');
       if (parts.length !== 3) {
         console.error('Invalid token format');
@@ -36,16 +39,32 @@ const RequestList = () => {
     }
     return null;
   };
+
   useEffect(() => {
     const fetchExams = async () => {
       setUserRole(getUserRole());
       try {
         const response = await axios.get(`${backendURL}/exam-request`);
         const examData = response.data.requests;
-        setExams(examData);
+
+        // Filter requests based on user role
+        let filteredExams = examData;
+        if (userRole === 'student') {
+          filteredExams = examData.filter(
+            (exam) => exam.studentUniqueId === uniqueId
+          );
+        } else if (userRole === 'professor') {
+          filteredExams = examData.filter(
+            (exam) =>
+              exam.mainProfessor.uniqueId === uniqueId ||
+              exam.secondaryProfessor.uniqueId === uniqueId
+          );
+        }
+
+        setExams(filteredExams);
 
         // Fetch student data for each exam
-        const studentPromises = examData.map(exam =>
+        const studentPromises = filteredExams.map((exam) =>
           axios.get(`${backendURL}/students/${exam.studentUniqueId}`)
         );
 
@@ -62,22 +81,15 @@ const RequestList = () => {
     };
 
     fetchExams();
-  }, []);
+  }, [userRole, uniqueId]);
 
   const handleApproval = async (id, approve) => {
     try {
       await axios.put(`${backendURL}/exam-request/${id}`, {
         approved: approve,
-        reason: approve ? "Approved by admin" : "Denied by admin",
-        
+        reason: approve ? 'Approved by admin' : 'Denied by admin',
       });
       window.location.reload(); // Refresh the page after approval/denial
-      // Update state locally after approval/denial
-      setExams((prevExams) =>
-        prevExams.map((exam) =>
-          exam._id === id ? { ...exam, approved: approve } : exam
-        )
-      );
     } catch (error) {
       console.error(`Error ${approve ? 'approving' : 'denying'} exam:`, error);
     }
@@ -94,12 +106,12 @@ const RequestList = () => {
         <div className="header-bar">
           <h3>Toate request-urile de examene</h3>
           {userRole === 'student' && (
-          <button className="add-request-button" onClick={() => {
-            handleApproval();
-            handleItemClick('/createexamrequest');
-          }}>
-            <HiPlus size={24} />
-          </button>
+            <button
+              className="add-request-button"
+              onClick={() => handleItemClick('/createexamrequest')}
+            >
+              <HiPlus size={24} />
+            </button>
           )}
         </div>
 
@@ -110,39 +122,44 @@ const RequestList = () => {
           </button>
         </div>
 
-        {/* Table Headers (Columns) */}
         <div className="table-header">
           <span>Nume Examen</span>
           <span>Data</span>
           <span>Profesor</span>
-          <span>Student</span> {/* New column for student name */}
-          {userRole === 'professor' && ( <span>Actiune</span>)}
+          <span>Student</span>
+          {userRole === 'professor' && <span>Actiune</span>}
         </div>
 
-        {/* Table Body (Rows) */}
         <div className="table-body">
           {exams.length > 0 ? (
             exams.map((exam) => (
               <div key={exam._id} className="table-row">
-                <span>{exam.subject}</span> {/* Exam Name */}
-                <span>{new Date(exam.examDate).toLocaleDateString()}</span> {/* Exam Date */}
-                <span>{exam.mainProfessor.firstName} {exam.mainProfessor.lastName}</span> {/* Professor Name */}
-                <span>{students[exam.studentUniqueId] ? `${students[exam.studentUniqueId].firstName} ${students[exam.studentUniqueId].lastName}` : 'Loading...'}</span> {/* Student Name */}
+                <span>{exam.subject}</span>
+                <span>{new Date(exam.examDate).toLocaleDateString()}</span>
+                <span>
+                  {exam.mainProfessor.firstName} {exam.mainProfessor.lastName}
+                </span>
+                <span>
+                  {students[exam.studentUniqueId]
+                    ? `${students[exam.studentUniqueId].firstName} ${students[exam.studentUniqueId].lastName}`
+                    : 'Loading...'}
+                </span>
                 {userRole === 'professor' && (
-                <span className="action-buttons">
-                  <button
-                    className="approve-button"
-                    onClick={() => handleApproval(exam._id, true)}
-                  >
-                    <FaCheck color="green" />
-                  </button>
-                  <button
-                    className="deny-button"
-                    onClick={() => handleApproval(exam._id, false)}
-                  >
-                    <FaTimes color="red" />
-                  </button>
-                </span>)}
+                  <span className="action-buttons">
+                    <button
+                      className="approve-button"
+                      onClick={() => handleApproval(exam._id, true)}
+                    >
+                      <FaCheck color="green" />
+                    </button>
+                    <button
+                      className="deny-button"
+                      onClick={() => handleApproval(exam._id, false)}
+                    >
+                      <FaTimes color="red" />
+                    </button>
+                  </span>
+                )}
               </div>
             ))
           ) : (

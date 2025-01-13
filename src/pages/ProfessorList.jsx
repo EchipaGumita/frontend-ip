@@ -4,6 +4,7 @@ import { HiMiniMagnifyingGlass, HiPlus } from "react-icons/hi2";
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import ReactPaginate from 'react-paginate';
+import { isAdmin } from '../utils/authUtils';
 import { jwtDecode } from 'jwt-decode';
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -13,6 +14,7 @@ const ProfessorList = () => {
   const [userRole, setUserRole] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [isUserAdmin, setIsUserAdmin] = useState(false); 
   const [searchTerm, setSearchTerm] = useState('');
   const professorsPerPage = 5;
 
@@ -40,7 +42,19 @@ const ProfessorList = () => {
     }
     return null;
   };
-
+ useEffect(() => {
+     const initialize = async () => {
+       const role = getUserRole();
+       setUserRole(role);
+ 
+       if (role === 'professor') {
+         const adminStatus = await isAdmin(); // Check admin status
+         setIsUserAdmin(adminStatus);
+       }
+     };
+ 
+     initialize();
+   }, []);
   useEffect(() => {
     setUserRole(getUserRole());
     const fetchProfessors = async () => {
@@ -90,11 +104,12 @@ const ProfessorList = () => {
       <main className="section professors">
         <div className="header-bar">
           <h3>Profesori</h3>
-          {userRole === 'professor' && (
+          {userRole === 'professor' &&isUserAdmin && (
+            
             <button className="add-request-button" onClick={() => handleItemClick('/addprofessor')}>
               <HiPlus size={24} />
-            </button>
-          )}
+            </button>)}
+          
         </div>
 
         <div className="search-bar">
