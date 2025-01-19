@@ -22,6 +22,28 @@ const AdminDashboard = () => {
   const [professorCount, setProfessorCount] = useState(0);
   const [backupFiles, setBackupFiles] = useState([]); // List of backup files
   const [selectedBackup, setSelectedBackup] = useState(""); // Selected backup file
+  const [upcomingExams, setUpcomingExams] = useState([]); // Upcoming exams data
+  const [kpis, setKPIs] = useState({
+    totalExams: 0,
+    examsToday: 0,
+    examsThisWeek: 0,
+    averageUtilization: 0,
+    pendingRequests: 0,
+  });
+
+  useEffect(() => {
+    const fetchKPIs = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.get(`${backendUrl}/exam/kpis`);
+        setKPIs(response.data);
+      } catch (error) {
+        console.error("Error fetching KPIs:", error);
+      }
+    };
+
+    fetchKPIs();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +74,18 @@ const AdminDashboard = () => {
       }
     };
 
+    const fetchUpcomingExams = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.get(`${backendUrl}/exam/upcoming?limit=5`);
+        setUpcomingExams(response.data.exams || []);
+      } catch (error) {
+        console.error("Error fetching upcoming exams:", error);
+      }
+    };
+
     fetchData();
+    fetchUpcomingExams();
   }, []);
 
   const handleBackup = async () => {
@@ -120,7 +153,13 @@ const AdminDashboard = () => {
           <MetricCard title="Total Students" value={studentCount} />
           <MetricCard title="Total Professors" value={professorCount} />
         </div>
-
+        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+          <MetricCard title="Total Exams Scheduled" value={kpis.totalExams} />
+          <MetricCard title="Exams Today" value={kpis.examsToday} />
+          <MetricCard title="Exams This Week" value={kpis.examsThisWeek} />
+          <MetricCard title="Avg Classroom Utilization" value={`${kpis.averageUtilization}%`} />
+          <MetricCard title="Pending Requests" value={kpis.pendingRequests} />
+        </div>
         <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           <ChartCard title="Professor Workload">
             <div style={{ height: "300px", width: "100%" }}>
@@ -133,8 +172,6 @@ const AdminDashboard = () => {
             </div>
           </ChartCard>
         </div>
-
-        {/* Backup and Restore Section */}
         <div style={{ marginTop: "20px", backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "10px" }}>
           <h5>Backup and Restore</h5>
           <div style={{ marginBottom: "10px" }}>
@@ -159,6 +196,35 @@ const AdminDashboard = () => {
               Restore from Backup
             </button>
           </div>
+        </div>
+        {/* Upcoming Exams Section */}
+        <div style={{ marginTop: "20px", backgroundColor: "#f8f9fa", padding: "20px", borderRadius: "10px" }}>
+          <h5>Upcoming Exams</h5>
+          {upcomingExams.length > 0 ? (
+            <ul style={{ listStyleType: "none", padding: 0 }}>
+              {upcomingExams.map((exam, index) => (
+                <li key={index} style={{ marginBottom: "10px", padding: "10px", borderBottom: "1px solid #ddd" }}>
+                  <p>
+                    <strong>Subject:</strong> {exam.subject}
+                  </p>
+                  <p>
+                    <strong>Date:</strong> {new Date(exam.date).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Time:</strong> {exam.hour}
+                  </p>
+                  <p>
+                    <strong>Classroom:</strong> {exam.classroom?.name || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Professor:</strong> {exam.mainProfessor?.firstName} {exam.mainProfessor?.lastName}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No upcoming exams found.</p>
+          )}
         </div>
       </div>
     </div>
