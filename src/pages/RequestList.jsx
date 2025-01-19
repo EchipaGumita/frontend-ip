@@ -5,6 +5,7 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import { jwtDecode } from 'jwt-decode'; // Import jwt-decode to decode the token
+import { isAdmin } from '../utils/authUtils';
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -13,75 +14,92 @@ const RequestList = () => {
   const [students, setStudents] = useState({}); // Store students' data by unique ID
   const [userRole, setUserRole] = useState(null);
   const [uniqueId, setUniqueId] = useState(null);
-
-  const getUserRole = () => {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-
-    try {
-      const decodedToken = jwtDecode(token);
-      const { uniqueId } = decodedToken;
-      setUniqueId(uniqueId);
-      const parts = uniqueId.split('-');
-      if (parts.length !== 3) {
-        console.error('Invalid token format');
-        return null;
-      }
-      const [, middle] = parts;
-      if (middle.length === 1 && !isNaN(middle)) {
-        return 'student';
-      }
-      if (middle.length === 3 && isNaN(middle)) {
-        return 'professor';
-      }
-    } catch (error) {
-      console.error('Error decoding token:', error);
-    }
+ const [isUserAdmin, setIsUserAdmin] = useState(false); 
+ const getUserRole = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found.');
     return null;
-  };
+  }
 
-  useEffect(() => {
-    const fetchExams = async () => {
-      setUserRole(getUserRole());
-      try {
-        const response = await axios.get(`${backendURL}/exam-request`);
-        const examData = response.data.requests;
+  try {
+    const decodedToken = jwtDecode(token);
+    const { uniqueId } = decodedToken;
+    setUniqueId(uniqueId);
+    const parts = uniqueId.split('-');
 
-        // Filter requests based on user role
-        let filteredExams = examData;
-        if (userRole === 'student') {
-          filteredExams = examData.filter(
-            (exam) => exam.studentUniqueId === uniqueId
-          );
-        } else if (userRole === 'professor') {
+    if (parts.length !== 3) {
+      console.error('Invalid token format');
+      return null;
+    }
+
+    const [, middle] = parts;
+
+    if (middle.length === 1 && !isNaN(middle)) {
+      return 'student';
+    }
+
+    if (middle.length === 3 && isNaN(middle)) {
+      const adminStatus = await isAdmin();
+      setIsUserAdmin(adminStatus);
+      return 'professor';
+    }
+  } catch (error) {
+    console.error('Error decoding token:', error);
+  }
+  return null;
+};
+
+
+useEffect(() => {
+  const fetchExams = async () => {
+    try {
+      const role = await getUserRole();
+      setUserRole(role);
+
+      if (!role || !uniqueId) {
+        console.error('User role or unique ID not available.');
+        return;
+      }
+
+      const response = await axios.get(`${backendURL}/exam-request`);
+      const examData = response.data.requests;
+
+      let filteredExams = examData;
+
+      if (role === 'student') {
+        filteredExams = examData.filter((exam) => exam.studentUniqueId === uniqueId);
+      } else if (role === 'professor') {
+        if (!isUserAdmin) {
           filteredExams = examData.filter(
             (exam) =>
               exam.mainProfessor.uniqueId === uniqueId ||
               exam.secondaryProfessor.uniqueId === uniqueId
           );
         }
-
-        setExams(filteredExams);
-
-        // Fetch student data for each exam
-        const studentPromises = filteredExams.map((exam) =>
-          axios.get(`${backendURL}/students/${exam.studentUniqueId}`)
-        );
-
-        const studentResponses = await Promise.all(studentPromises);
-        const studentData = studentResponses.reduce((acc, curr) => {
-          acc[curr.data.uniqueId] = curr.data;
-          return acc;
-        }, {});
-
-        setStudents(studentData);
-      } catch (error) {
-        console.error('Error fetching exams or students:', error);
       }
-    };
 
-    fetchExams();
-  }, [userRole, uniqueId]);
+      setExams(filteredExams);
+
+      const studentUniqueIds = [...new Set(filteredExams.map((exam) => exam.studentUniqueId))];
+      const studentPromises = studentUniqueIds.map((id) =>
+        axios.get(`${backendURL}/students/${id}`)
+      );
+
+      const studentResponses = await Promise.all(studentPromises);
+      const studentData = studentResponses.reduce((acc, curr) => {
+        acc[curr.data.uniqueId] = curr.data;
+        return acc;
+      }, {});
+
+      setStudents(studentData);
+    } catch (error) {
+      console.error('Error fetching exams or students:', error);
+    }
+  };
+
+  fetchExams();
+}, [uniqueId, isUserAdmin]);
 
   const handleApproval = async (id, approve) => {
     try {
