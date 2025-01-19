@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '../middleware/ProtecteRoute'; // Ensure this path is correct
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import ProfessorList from './pages/ProfessorList';
@@ -18,6 +19,7 @@ import CreateExamRequest from './pages/CreateExamRequest';
 import ViewExamStudent from './pages/viewExamStudent';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import CreateGroup_SubgroupForm from './pages/CreateGroup-SubgroupForm';
+import AdminDashboard from './pages/adminDashBoard';
 
 const App = () => {
   return (
@@ -29,6 +31,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/resetpassword" element={< ResetPasswordPage/>} />
         <Route path="/resetpassword" element={< ResetPasswordPage/>} />
+        <Route path="/admindashboard" element={< AdminDashboard/>} />
         
 
         {/* Protected Routes for Students */}

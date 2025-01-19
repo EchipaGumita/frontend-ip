@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is import
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { HiPlus } from 'react-icons/hi';
 import { Dropdown } from 'react-bootstrap';
+import { jwtDecode } from 'jwt-decode';
 import { isAdmin } from '../utils/authUtils';
 import Sidebar from '../components/Sidebar';
 import ReactPaginate from 'react-paginate'; // Import ReactPaginate
@@ -18,6 +19,7 @@ const StudentList = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
    const [isUserAdmin, setIsUserAdmin] = useState(false); 
   const [groupId, setGroupId] = useState('');
+  const [userRole, setUserRole] = useState(null);
   const [subgroupId, setSubgroupId] = useState('');
 
   // Pagination states
@@ -54,6 +56,7 @@ useEffect(() => {
       setUserRole(role);
 
       if (role === 'professor') {
+        console.log('Checking admin status...');
         const adminStatus = await isAdmin(); // Check admin status
         setIsUserAdmin(adminStatus);
       }

@@ -60,11 +60,14 @@ const Dashboard = () => {
     initialize();
   }, []);
   useEffect(() => {
-    setUserRole(getUserRole());
-    
     const fetchExams = async () => {
       try {
         const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+  
         const decodedToken = jwtDecode(token);
         const professorUniqueId = decodedToken.uniqueId;
   
@@ -83,7 +86,7 @@ const Dashboard = () => {
         );
   
         // Additional filtering for professors
-        if (userRole === 'professor'&& !isUserAdmin) {
+        if (userRole === 'professor' && !isUserAdmin) {
           filteredExams = filteredExams.filter(
             (exam) =>
               (exam.mainProfessor && exam.mainProfessor.uniqueId === professorUniqueId) ||
@@ -104,7 +107,7 @@ const Dashboard = () => {
     };
   
     fetchExams();
-  }, [currentPage, searchTerm, userRole]);
+  }, [currentPage, searchTerm, userRole, isUserAdmin]);
   
 
   const removeExamFromState = (examId) => {
